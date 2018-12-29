@@ -1,0 +1,4 @@
+---Cross Synthisizer---
+Cross Synthisizer reads four sound files and mixes them together in different mixes of modulus and phase
+The synth is set up in three parts: 2 submixes and a final mix.  The first two rows are submixes.
+Each sound will also be repitched in accordance to the keyboard and the center pitch.
