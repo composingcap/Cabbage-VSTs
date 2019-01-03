@@ -197,7 +197,7 @@ instr grain8Gen
     iSpreadMode chnget "spreadMode"
     
         
-    aEnv transeg 0, iA/iTotalADR*p3, iAType, 1, iD, iDType, iS, iR, iRType, 0 ; fancy adsr
+    aEnv transeg 0, iA/iTotalADR*p3, iAType, 1, iD/iTotalADR*p3, iDType, iS, iR/iTotalADR*p3, iRType, 0 ; fancy adsr
 
 
     iAmp = p5
