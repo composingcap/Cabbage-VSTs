@@ -10,7 +10,7 @@ form caption("super grain") size(400, 400), colour(20,20,20), pluginid("spgn")
     rslider bounds(70, 110, 40,40) text("Rand") channel("grateR")  range(0,1,0.25,1,0.01 )
     rslider bounds(140, 30, 70,70) text("Grain Amp") channel("gamp") range(0, 1, 1, 1,0.001) $SLIDER1
     rslider bounds(200, 40, 40,40) text("Rand") channel("gampR") 
-    rslider bounds(140, 100, 70,70) text("Delay") channel("del") range(0, 0.99, 0.1, 1,0.01) $SLIDER1
+    rslider bounds(140, 100, 70,70) text("Delay") channel("del") range(0, 0.9, 0.1, 1,0.01) $SLIDER1
     rslider bounds(200, 110, 40,40) text("Rand") channel("delR") range(0, 1, 0.5, 1, 0.01)
    
     button text("Freeze"), colour:0("grey") colour:1("white") bounds(250,110,100,50) channel("freeze")
@@ -21,24 +21,24 @@ form caption("super grain") size(400, 400), colour(20,20,20), pluginid("spgn")
     
     rslider bounds(50,40,40,40) channel("A") range(0,1,0.2,1,0.001) $SLIDER1
     label text("A") bounds (63,52,15,15) fontcolour("black")
-    rslider bounds (60,25,20,20) channel("AType") range(-3,3,0,1,0.1)
+    ;rslider bounds (60,25,20,20) channel("AType") range(-3,3,0,1,0.1)
     
     rslider bounds(90,40,40,40) channel("D")range(0,1,0.1,1,0.001) $SLIDER1
     label text("D") bounds (103,52,15,15) fontcolour("black")
-    rslider bounds (100,25,20,20) channel("DType") range(-3,3,0,1,0.1)
+    ;rslider bounds (100,25,20,20) channel("DType") range(-3,3,0,1,0.1)
     
     rslider bounds(130,40,40,40) channel("S")range(0,1,0.5,1,0.001) $SLIDER1
     label text("S") bounds (143,52,15,15) fontcolour("black")
     
     rslider bounds(170,40,40,40) channel("R")range(0,1,0.3,1,0.001) $SLIDER1
     label text("R") bounds (183,52,15,15) fontcolour("black")
-    rslider bounds (180,25,20,20) channel("RType") range(-3,3,0,1,0.1)
+    ;rslider bounds (180,25,20,20) channel("RType") range(-3,3,0,1,0.1)
     
     rslider channel("envR") range(0,1,0,1,0.01) bounds(50, 80, 40,40) $SLIDER1
     label text("random envelope length") bounds(100,90,150,10) align("left")
     
-    rslider channel("typeR") range(0,1,0,1,0.01) bounds(50, 120, 40,40) $SLIDER1
-    label text("random curve") bounds(100,130,150,10) align("left")
+    ;rslider channel("typeR") range(0,1,0,1,0.01) bounds(50, 120, 40,40) $SLIDER1
+    ;label text("random curve") bounds(100,130,150,10) align("left")
     
     }
     
@@ -64,7 +64,7 @@ sr = 44100
 ksmps = 32
 nchnls = 2
 0dbfs = 1
-giMaxDelay = 5
+giMaxDelay = 10
 giTabLen = sr*giMaxDelay
 giBuf1 ftgenonce 101, 0, giTabLen, 2,0
 giBuf2 ftgenonce 102, 0, giTabLen, 2,0
@@ -139,6 +139,8 @@ itabLen = giTabLen
 
 gkMix chnget "grainMix"
 
+aMix lowpass2 a(gkMix), 50, 0.5
+
 
 
     if ((kGrainer == 1) && (changed(kGrainer)==1)) then    
@@ -146,9 +148,7 @@ gkMix chnget "grainMix"
         kRandom random -gkGlenR, gkGlenR
         kThisLen *= (1+ kRandom)
     
-        kAmp = gkGamp
-
-        kStartPos = (k(gaSamp)-(gkDel*sr)*(1-random(0,gkDelR))+giTabLen)%giTabLen
+        kAmp = gkGamp       
         
         
         event "i", "grain8Gen", 0, kThisLen, 1, kAmp
@@ -157,7 +157,7 @@ gkMix chnget "grainMix"
 
 
 
-outs gaOut[0]*gkMix+gaIn[0]*(1-gkMix),gaOut[1]*gkMix+gaIn[1]*(1-gkMix)
+outs gaOut[0]*aMix+gaIn[0]*(1-aMix),gaOut[1]*aMix+gaIn[1]*(1-aMix)
 
 gaOut *= 0
 
@@ -197,11 +197,13 @@ instr grain8Gen
     iSpreadMode chnget "spreadMode"
     
         
-    aEnv transeg 0, iA/iTotalADR*p3, iAType, 1, iD/iTotalADR*p3, iDType, iS, iR/iTotalADR*p3, iRType, 0 ; fancy adsr
-
+    ;aEnv transeg 0, iA/iTotalADR*p3, iAType, 1, iD/iTotalADR*p3, iDType, iS, iR/iTotalADR*p3, iRType, 0 ; fancy adsr
+    aEnv adsr iA/iTotalADR*p3, iD/iTotalADR*p3, iS, iR/iTotalADR*p3
 
     iAmp = p5
-    iRandStart = i(gkDel)*(1-random(0,i(gkDelR)))%1
+    
+    iRandStart = (((i(gkDel)*0.75)*(random(0,1-i(gkDelR)))+1)%1)+0.001
+    
     aPos wrap gaSync-iRandStart,0,1
     
     aGrain[] init 2
