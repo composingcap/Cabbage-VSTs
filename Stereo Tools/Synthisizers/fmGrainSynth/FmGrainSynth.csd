@@ -66,6 +66,23 @@ ksmps = 32
 nchnls = 2
 0dbfs = 1
 
+
+
+instr update
+
+    gkClockMode chnget "clockMode"
+
+    if gkClockMode == 0 then
+        chnset "visible(1)", "deviceClock"
+        chnset "visible(0)", "transportClock"
+    else
+        chnset "visible(0)", "deviceClock" 
+        chnset "visible(1)", "transportClock"
+    endif
+    
+endin
+
+
 ; Instrument will be triggered by keyboard widget
 instr 1
 
@@ -74,6 +91,24 @@ SEnvChan sprintf "chan_%d", iUniqueTag	;Clunky way to create a unique chan share
 
 ;Query Gui
 
+if gkClockMode == 0 then
+    kGrainRate chnget "GrainRate"
+    kGrainLength chnget "GrainLength"
+else
+    kGrainRateN chnget "GrainRateN"
+    kGrainRateD chnget "GrainRateD"
+    kGrainLengthN chnget "GrainLengthN"
+    kGrainLengthD chnget "GrainLengthD"
+    kBPM chnget "HOST_BPM"
+    if chnget("IS_A_PLUGIN") == 0 then
+        kBPM = 120
+    endif
+    
+    kGrainRate = kGrainRateD/kGrainRateN*(60/kBPM)
+    kGrainLength = kGrainLengthN/kGrainLengthD*(60/kBPM)   
+    
+    
+endif
 
 kFreqJitter chnget "FreqJitter"
 kAmpJitter chnget "AmpJitter"
@@ -81,9 +116,11 @@ kModDepth chnget "ModDepth"
 kModDepthJitter chnget "ModDepthJitter"
 kIndex chnget "Index"
 kIndexJitter chnget "IndexJitter"
-kGrainRate chnget "GrainRate"
+
+
+
 kGrainRateJitter chnget "GrainRateJitter"
-kGrainLength chnget "GrainLength"
+
 kGrainLengthJitter chnget "GrainLengthJitter"
 kPan chnget "pan"
 kPanJitter chnget "panJitter"
@@ -155,25 +192,14 @@ outs kEnv*aGrain*kFmEnv*0.05*p8*kGain, kEnv*aGrain*kFmEnv*0.05*(1-p8)*kGain
 
 endin
 
-instr update
 
-    gkClockMode chnget "clockMode"
-
-    if gkClockMode == 0 then
-        chnset "visible(1)", "deviceClock"
-        chnset "visible(0)", "transportClock"
-    else
-        chnset "visible(0)", "deviceClock" 
-        chnset "visible(1)", "transportClock"
-    endif
-    
-endin
 
 </CsInstruments>
 <CsScore>
 ;causes Csound to run for about 7000 years...
 f0 z
-f1 0 4097 10 1 ;a sine wave
 i "update" 0 z
+f1 0 4097 10 1 ;a sine wave
+
 </CsScore>
 </CsoundSynthesizer>
