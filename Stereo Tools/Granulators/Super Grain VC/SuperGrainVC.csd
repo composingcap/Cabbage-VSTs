@@ -468,13 +468,13 @@ instr grain8Gen
     iGrainPos = limit(iSpreadCenter+iGrainPosRand, 0, 1)
    
     aV1 Vocoder a1, aGrain[0], 100, 5000, 5, 10
-    aGrain[0] = (1-gaVocodermix)*aEnv*aGrain[0]+gaVocodermix*aV1
+    aGrain[0] = ((1-gaVocodermix)*aGrain[0]+gaVocodermix*aV1)*aEnv
     aGrain[0] = iAmp*aGrain[0]
     aGrain[0] = iGrainPos*aGrain[0]
     
     
     aV2 Vocoder a1, aGrain[1], 100, 5000, 5, 10
-    aGrain[1] = (1-gaVocodermix)*aEnv*aGrain[1]+ gaVocodermix*aV2
+    aGrain[1] = ((1-gaVocodermix)*aGrain[1]+ gaVocodermix*aV2)*aEnv
     aGrain[1] = iAmp*aGrain[1]
     aGrain[1] = (1-iGrainPos)*aGrain[1]
     
