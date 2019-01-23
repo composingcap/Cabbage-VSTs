@@ -5,8 +5,8 @@ rslider bounds(8, 10, 80, 40) text("Grain Period") range(0.03125, 1, 0.25, 1, 0.
 rslider bounds(8, 50, 80, 40) text("Grain Length") range(0.03125, 1, 0.125, 1, 0.03125)  channel("len") trackercolour("black") textcolour("black")
 rslider bounds(70, 10, 80, 40) text("Random") range(0, 1, 0, 1, 0.0675)  channel("periodR") trackercolour("black") textcolour("black")
 rslider bounds(70, 50, 80, 40) text("Random") range(0, 1, 0, 1, 0.0675)  channel("lenR") trackercolour("black") textcolour("black")
-
-groupbox text("grain envelope") bounds(8,100,130,70){
+combobox channel("lpcFile") items("FemVoice", "Atari", "Child", "Italian", "Medevil", "Protection", "Xavier", "OboeMultiphonics", "BassClarinetSounds") mode(1) bounds(8,100,75,14)
+groupbox text("grain envelope") bounds(100,100,130,70){
     label bounds(15,25,150,17) text("A    D    S    R") align("left")
     rslider bounds(10,40,20,20) channel("gA") range(0.01,1,0.2,1,0.01)
     rslider bounds(40,40,20,20) channel("gD") range(0.01,1,0.2,1,0.01)
@@ -15,7 +15,7 @@ groupbox text("grain envelope") bounds(8,100,130,70){
 
 }
 
-groupbox text("voice envelope") bounds(200,100,130,70){
+groupbox text("voice envelope") bounds(250,100,130,70){
     label bounds(15,25,150,17) text("A    D    S    R") align("left")
     rslider bounds(10,40,20,20) channel("vA") range(0.01,5,0.5,0.5,0.01)
     rslider bounds(40,40,20,20) channel("vD") range(0.01,5,0.5,0.5,0.01)
@@ -41,6 +41,10 @@ nchnls = 2
 
 ;instrument will be triggered by keyboard widget
 instr 1
+
+Sitems[] fillarray "FemVoice", "Atari", "Child", "Italian", "Medevil", "Protection", "Xavier", "OboeMultiphonics", "BassClarinetSounds"
+kname chnget "lpcFile" 
+gSname sprintfk "%s.lpc", Sitems[kname-1]
 
 iA chnget "vA"
 iD chnget "vD"
@@ -79,6 +83,8 @@ endin
 
 instr 2
 
+
+
 kTime random 0,1
 iTime = i(kTime)
 
@@ -93,7 +99,7 @@ kPitch cpsmidinn p4
 
 aEnv adsr (iA/iADSRTotal)*p3, (iD/iADSRTotal)*p3, iS, (iD/iADSRTotal)*p3  
 
-kRmsr,kRmso,kErr,kCps lpread iTime,"FemVoice.lpc"
+kRmsr,kRmso,kErr,kCps lpread iTime, gSname
 kRmso *= 0.00001	
 
 aSig  buzz kRmso, kPitch, int(sr/2/kCps), 1 
