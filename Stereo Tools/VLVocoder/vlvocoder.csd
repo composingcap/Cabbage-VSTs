@@ -1,4 +1,5 @@
 <Cabbage>
+bundle("manpluck.aiff", "impuls21.aiff")
 form caption("VL Vocoder") size(400, 120), colour(black), pluginid("VLVO")
 #define SLIDER trackercolour(white) colour(grey)
 rslider text("Q") channel("Q") range(0.4, 10, 2, 1, 0.01) bounds (200, 0, 60,60) $SLIDER

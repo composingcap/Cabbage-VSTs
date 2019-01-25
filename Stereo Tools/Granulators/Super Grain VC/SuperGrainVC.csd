@@ -1,6 +1,6 @@
 <Cabbage>
 #define SLIDER1 colour("white"), trackercolour("grey")
-
+bundle("impulse20.aiff", "mandpluck.aiff")
 form caption("super grain vc") size(400, 400), colour(20,20,20), pluginid("vcgn")
    
 

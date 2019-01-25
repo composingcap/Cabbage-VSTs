@@ -1,5 +1,6 @@
 <Cabbage>
 form caption("Idle Chatter Box") size(400, 180), colour("grey"), pluginid("chtr")
+bundle("Atari.lpc", "BassClarinetSounds.lpc", "Child.lpc", "FemVoice.lpc", "Italian.lpc", "Medevil.lpc", "OboeMultiphonics.lpc", "Protection.lpc", "Xavier.lpc") 
 keyboard bounds(142, 10, 250, 80)
 rslider bounds(8, 10, 80, 40) text("Grain Period") range(0.03125, 1, 0.25, 1, 0.03125)  channel("period") trackercolour("black") textcolour("black")
 rslider bounds(8, 50, 80, 40) text("Grain Length") range(0.03125, 1, 0.125, 1, 0.03125)  channel("len") trackercolour("black") textcolour("black")
