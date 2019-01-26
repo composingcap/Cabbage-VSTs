@@ -51,7 +51,7 @@ form caption("Untitled") size(600, 300), colour(58, 110, 182), pluginid("def1")
 
 hrange channel ("interpLow", "interpHigh") bounds(8, 210, 450, 20) 
 rslider channel ("interpCorse") bounds(450,210,50,50) text("index rate") range(0, 10,0,2,0.01)
-rslider channel ("interpCorse") bounds(500,210,50,50) text("freq rate") range(0,100,0,1,0.01)
+rslider channel ("interpFine") bounds(500,210,50,50) text("freq rate") range(0,100,0,1,0.01)
 
 
 keyboard bounds(8, 240, 381, 50)
@@ -84,7 +84,7 @@ instr 1
     
     kInterp scale kInterp, kLow, kHigh
     kCount = 0
-    kTab = 3
+    kTab = 1
     
 
     kCount = 0
