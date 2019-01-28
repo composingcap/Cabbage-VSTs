@@ -1,4 +1,4 @@
-<Cabbage>
+ <Cabbage>
 #define OSCSELECT nslider range(2,80,2,1,1) 
 /*combobox identchannel("WT") populate("*.wav", "Wavetables") channeltype("float") value(2)*/ 
 #define ENVSELECT combobox items("___", "Env 1", "Env 2", "Env 3", "Env 4", "LFO 1", "LFO 2", "LFO 3")
@@ -56,7 +56,10 @@ groupbox text("filter B")  bounds (328 ,138,300,120)
 groupbox text("effect 1")  bounds(648, 8, 300, 120)
 groupbox text("effect 2")  bounds (648,138,300,120)
 
-groupbox text("envelope") bounds(328, 268, 618,200)
+groupbox text() bounds(328, 268, 618,200){
+    $ENVSELECT value(2) bounds(5,5,100,24)
+    gentable amprange(0,1,1,0.01) tablenumber(1) bounds(100,30,400,100) active(0)
+}
 
 groupbox text("insert 1") bounds (8,398,140,120)
 groupbox text("insert 2") bounds (168,398,140,120)
@@ -73,9 +76,10 @@ ksmps = 32
 nchnls = 2
 0dbfs = 1
 gaMix init 0
+gaFiltA init 0
+gaFiltB init 0
 
-
-opcode makeOsc, a, iii
+opcode makeOsc, aa, iii
     iamp, inote, iOscNumber xin
     aEnv madsr 0.05, 0.1, 0.8, 0.1
     Sprefix sprintf "osc%d.", iOscNumber
@@ -85,14 +89,14 @@ opcode makeOsc, a, iii
         
     
     iWT chnget strcat(Sprefix, "wt")
+    iWT = iWT+100
     kWTPos chnget strcat(Sprefix, "wtpos")
     kAmp chnget strcat(Sprefix, "amp")
-    kAmp portk kAmp, 0.01
+
     iTabLen = tableng(iWT)
     iTabSlice = iTabLen/2048
     iDivision = 1/iTabSlice - 1
     kWTInterp = kWTPos/iDivision
-    kWTInterp portk kWTInterp, 0.05 
     kWTLow = floor(kWTInterp)
     kWTHigh = kWTLow + 1
     kWTInterp = kWTInterp-kWTLow
@@ -104,30 +108,79 @@ opcode makeOsc, a, iii
     aMix = aMix1*(1-kWTInterp)+aMix2*kWTInterp
     aMix *= aEnv
     aMix *= kAmp
-    xout aMix 
+    kFmix chnget strcat(Sprefix, "filtermix")
+   
+    kFmix = (kFmix+1)*0.5
+    
+    aFiltB = aMix*(1-kFmix)
+    aFiltA = aMix*kFmix 
+    xout aFiltA, aFiltB
+        
+    
+     
  endop
+ 
+opcode filters, a, ai
+    aOsc, iNumber xin 
+    
+        kFilterSelect = 1
+        
+       if kFilterSelect == 1 then
+            aFiltered = aOsc
+            
+       elseif kFilterSelect == 2 then
+        
+       elseif kFilterSelect == 3 then
+       
+       elseif kFilterSelect == 4 then
+       
+       elseif kFilterSelect == 5 then
+       
+       elseif kFilterSelect == 6 then
+    
+    
+        endif
+    
+    xout aFiltered
+
+
+endop
 
 ;instrument will be triggered by keyboard widget
 instr 1
-    aMix makeOsc p5, p4, 1    
-    gaMix += aMix
-    aMix makeOsc p5, p4, 2    
-    gaMix += aMix
-    aMix makeOsc p5, p4, 3    
-    gaMix += aMix
+    aFiltA, aFiltB makeOsc p5, p4, 1 
+      
+    aFiltA2, aFiltB2 makeOsc p5, p4, 2 
+    aFiltA += aFiltA2 
+    aFiltB += aFiltB2
+    
+    aFiltA2, aFiltB2 makeOsc p5, p4, 3 
+    aFiltA += aFiltA2  
+    aFiltB += aFiltB2
+    
+    aEffects1 filters aFiltA, 1
+    
+    aEffects2 filters aFiltA, 2
+    
+    gaMix += (aEffects1+aEffects2)
+    
+    
 endin
+
+
 
 instr loadWT
 ;Wavetables Each frame is 2048 samples, to interpolate between the frames crossfade between the frames.  The steps will be determined by the table length
-    giBasic ftsamplebank "Wavetables", 1, 0, 0, 0
+    giBasic ftsamplebank "Wavetables", 101, 0, 0, 0
 endin
 
 instr output
 
     ;gaMix limit gaMix, 0, 1
     gaMix butterbp gaMix, sr/2.1, sr/2    
-    outs gaMix, gaMix
+    outs gaMix*0.25, gaMix*0.25
     clear gaMix
+
 
 endin
 
@@ -139,8 +192,7 @@ endin
 f0 z
 i "loadWT" 0 0.1
 i "output" 0 z
-
-
+f 1 0 1000 7 0 100 1 200 0.8 700 0
 
 
 </CsScore>
