@@ -72,6 +72,7 @@ ksmps = 128 ; needs a high ksrate due the the large amount of data. This is set 
 nchnls = 2
 0dbfs = 1
 
+giFftSize init 2048
 
 instr update
     ;gui info 
@@ -85,7 +86,8 @@ instr update
     iGuiFbY= 350
 
     iBands = 50
-    giFftSize init 2048
+    
+    
     
     kFftFilter[] init giFftSize
     kFftDel[] init giFftSize
@@ -97,7 +99,7 @@ instr update
     
     
     giWindowSize = giFftSize
-    giTabSize = giWindowSize+2
+    giTabSize = giWindowSize
     giOverlap = 4
     
     iTween1[] init giTabSize
