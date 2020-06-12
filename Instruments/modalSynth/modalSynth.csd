@@ -8,6 +8,21 @@ image colour(0,0,0,0) bounds(20, 50, 200,100) {
     //combobox bounds(0, 0, 100, 25), channel("preset"), populate("*.snaps")
     //filebutton bounds(110, 0, 60, 25), channel("but1"), text("Save"), mode("snapshot")
 }
+image bounds(20,50,740,60){
+    combobox bounds(0,0,100,14) items("impulse", "bow", "live input") channel("inputMode")
+
+    image bounds(0,30,250,30) colour(200,0,0,255) identchannel("impulseInput") visible(0) active(0){
+    
+        label text("exitation") bounds (0,4,80,14) fontcolour(0,0,0,255)
+        combobox bounds (80,0,140,20) populate("*.aif","./impulses") channel("impulseSelect") channeltype("string")  value("env_hammer1")
+    }
+    
+    image bounds(0,30,250,30) colour(200,0,0,255) identchannel("bowedInput") visible(1) active(0){
+    
+    
+       }
+}
+
 image bounds(0,100,800,800) colour(0,0,0,0)
 {
 modalSynthMatrix namespace("cp"), bounds(0,0,800,280) 
@@ -25,10 +40,7 @@ image bounds(0,280,250,80) colour(0,0,0,0){
 
 }
 
-image bounds(0,550,250,30) colour(0,0,0,0){
-label text("exitation") bounds (0,4,80,14) fontcolour(0,0,0,255)
-    combobox bounds (80,0,140,20) populate("*.aif","./impulses") channel("impulseSelect") channeltype("string")  value("env_hammer1")
-}
+
 
 image bounds(0, 380, 200, 150)colour(0,0,0,0) {
     label text("Macro Buttons")  bounds(20,4,160,14)  fontcolour(0,0,0,255)
@@ -106,6 +118,9 @@ gkRandomGain init 0
 gkRandomQ init 0
 gkRandomPan init 0
 giSfTabs ftgen giSfTab, 0, 0, 1, "./impulses/env_hammer1.aif", 0, 0, 0 
+
+
+giBow1 ftgen 0, 0, 4096, 7, 1, 4096, 0; 
 
 opcode resonbank, aa, akiiiiikai
 //Resonant filters in parallel
@@ -269,6 +284,7 @@ endop
 
 
 instr 1
+
 aOutL, aOutR init 0
 ihandle updateTables 0
 kInit init 0
@@ -279,6 +295,8 @@ iDecay *= 0.001
 iSustain chnget "voiceSustain"
 iRelease chnget "voiceRelease"
 iRelease *= 0.001
+
+iInputMode chnget "inputMode"
 
 
 kOutputMode = gkOutputMode
@@ -295,13 +313,28 @@ kNum = 24
 
 SKIP:
 
+if iInputMode == 1 then
+    iSampleTime = tableng(1)/sr
+    aIndex line 0, iSampleTime, 1
 
-iSampleTime = tableng(1)/sr
-aIndex line 0, iSampleTime, 1
+    aIn table3 aIndex, giSfTab, 1, 0, 0
 
-aIn table3 aIndex, giSfTab, 1, 0, 0
+    aIn *= 0.005
+    
+elseif iInputMode == 2 then
+    kBowRate init 10
+    kBowRate randomi mtof(p4-24), mtof(p4-12), kBowRate
+    kBowAmp randomi 0.003, 0.005, kBowRate*0.25
+    aIn  poscil kBowAmp, kBowRate, giBow1
+    aIn = aIn-lowpass2(aIn, 50, 1)
+    aIn phaser1 aIn,  kBowRate*0.3, 4, 0.5
+elseif iInputMode == 3 then
 
-aIn *= 0.005
+    aIn = inch(1) + inch(2); 
+    aIn *= 0.005
+
+endif 
+
 aEnv transegr 0, iAttack, 1, 1, iDecay, 0, iSustain, iRelease, -1, 0 
 kPitch = p4
 
@@ -309,6 +342,9 @@ aOutL, aOutR resonbank aIn, kPitch, giNotes, iQsTab, giAmps, giPans, giEnabled,k
 
 aOutL *= aEnv
 aOutR *= aEnv
+
+aOutL lowpass2 aOutL, mtof(p4-3),2
+aOutR lowpass2 aOutR, mtof(p4-3),2
 
 gaOutL += aOutL*p5
 gaOutR += aOutR*p5
@@ -319,6 +355,7 @@ endin
 instr io
 kGain chnget "gain"
 aGain interp kGain
+
 outs gaOutL*aGain, gaOutR*aGain
 clear gaOutL, gaOutR
 
@@ -352,6 +389,9 @@ kRandomPan *= kRandomPanTrigger
 
 
 kCount = 0
+kRandomMode random 0, 3
+kRandomMode = round(kRandomMode)
+
 
 until kCount >= 24 do
 
@@ -370,13 +410,40 @@ tabw chnget(SName), kCount, giPans
 endif
 
 
-if kRandomFreq == 1 then
+if kRandomFreq == 1 then    
+    
     if kCount == 0 then
         kLastRand = 0
-    elseif k(rand(1))<0.5 then
-       kLastRand += rand(0.5)+0.5
+        kRDepth = rand(0.5)+0.5
+        kRDepth2 = rand(0.5)+0.5
     else
-        kLastRand += rand(5)+5
+        if kRandomMode == 0 then
+                if k(rand(1))<0.5 then
+            kLastRand += rand(0.25+0.25*kRDepth)+0.25+kRDepth2*0.25
+        else
+            kLastRand += rand(3+3*kRDepth)+3+4*kRDepth2
+        endif
+        
+        elseif kRandomMode == 1 then
+            kLastRand += rand(0.5+2*kRDepth)+2*kRDepth2+0.5; 
+    
+        elseif kRandomMode == 2 then
+    
+            kLastRand += rand(kRDepth*2+2)+(2+4*kRDepth2); 
+    
+        
+    
+        elseif kRandomMode == 3 then
+    
+        if kLastRand == 0 then
+            kStep = 12
+            
+        else
+            kStep = kStep*0.5;
+        endif
+        kLastRand += kStep + rand(kRDepth*3);
+    
+    endif
     endif
     
     SName sprintfk "note%d", kCount
@@ -506,6 +573,7 @@ instr lfoDrive
     endif
                 
 endin
+
 
 
 </CsInstruments>
