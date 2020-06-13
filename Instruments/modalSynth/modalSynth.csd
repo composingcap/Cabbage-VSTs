@@ -1,7 +1,8 @@
 <Cabbage>
 
+#define impulseSlider rslider bounds(10,35,20,20) range(0.0001,1,0.0001,1,0.0001) colour(0,0,0,0) trackercolour("white") trackerthickness(2)
 
-form caption("Modal Synth") size(800, 800), colour("whitesmoke"), pluginid("cpmd"), import( "./lfo.plant", "./modalSynthPlants.plant"), bundle("./impulses","./lfo.plant", "./modalSynthPlants.plant")
+form caption("Modal Synth") size(800, 800), colour("whitesmoke"), pluginid("cpmd"), import( "./lfo.plant", "./modalSynthPlants.plant"), bundle("./lfo.plant", "./modalSynthPlants.plant")
 
 label text("Modal Synth") bounds(20,10,500,36) align("left") fontcolour("black")
 image colour(0,0,0,0) bounds(20, 50, 200,100) {
@@ -9,16 +10,46 @@ image colour(0,0,0,0) bounds(20, 50, 200,100) {
     //filebutton bounds(110, 0, 60, 25), channel("but1"), text("Save"), mode("snapshot")
 }
 image bounds(20,50,740,60){
-    combobox bounds(0,0,100,14) items("impulse", "bow", "live input") channel("inputMode")
-
-    image bounds(0,30,250,30) colour(200,0,0,255) identchannel("impulseInput") visible(0) active(0){
-    
-        label text("exitation") bounds (0,4,80,14) fontcolour(0,0,0,255)
-        combobox bounds (80,0,140,20) populate("*.aif","./impulses") channel("impulseSelect") channeltype("string")  value("env_hammer1")
+    label bounds(0,0,100,14) text("Input Mode")
+    combobox bounds(0,15,100,14) items("impulse", "bow", "live input") channel("inputMode") align("centre")
+    rslider channel("inputGain") range(0.1,10,1,0.5,0.01) bounds(0,30,100,30)
+    image bounds(110,0,150,60) colour(200,0,0,255) identchannel("impulseInput") visible(1) active(1){
+        gentable tablenumber(200) amprange(0, 1, 200, 0) active(0) bounds(10,10,125, 20) tablecolour("black") tablebackgroundcolour(0,0,0,0) tablegridcolour(0,0,0,0) identchannel("impulseTab")
+        $impulseSlider value(1) channel("impulseSlider1")
+        $impulseSlider bounds(35,35,20,20) channel("impulseSlider2")
+        $impulseSlider bounds(60,35,20,20) channel("impulseSlider3")
+        $impulseSlider bounds(85,35,20,20) channel("impulseSlider4")
+        $impulseSlider bounds(110,35,20,20) channel("impulseSlider5")
     }
     
-    image bounds(0,30,250,30) colour(200,0,0,255) identchannel("bowedInput") visible(1) active(0){
-    
+    image bounds(110,0,150,60) colour(0,200,0,255) identchannel("bowedInput") visible(0) active(0){
+        label bounds(0,0,150,14) text("Bow Type") fontcolour("black")
+
+        combobox bounds(25,15,100,14) channel("bowType") items("random saw", "random impulses", "noise")
+        hrange channel("bowNoiseOffsetLow", "bowNoiseOffsetHigh") identchannel("sawBowOptions") range(-36,24, -24:-12, 1, 0.5) bounds(15,30,140,20) visible(0)
+        hrange channel("bowNoiseDenseLow", "bowNoiseDenseHigh") identchannel("dustBowOptions") range(10,500, 2:5, 0.5, 0.001) bounds(15,30,140,30) visible(0)
+        rslider channel("bowNoiseBeta") identchannel("bowNoise") range(-0.9, 0.9, 0, 1, 0.01) bounds(0,32,150,30) visible(0)
+        }
+        
+        image bounds(110,0,150,60) colour(0,200,0,255) identchannel("liveInput") visible(0) active(0){
+                combobox bounds(25,15,100,14) channel("inputCh") items("mono","stereo","24 channel") value(2)
+
+        }
+        
+        
+        
+        image identchannel("inputFilter") bounds(258,0,200,60) visible(1){
+            button channel("inputFilterMode")  text("") bounds(5,0,90,14) colour:0(50,100,100) colour:1(50,200,200) identchannel("inputFilterModeIdent") value(1) 
+            button channel("inputFilterEnabled") value(0)  text("lp / hp state") bounds(5,40,90,14) colour:0("grey") colour:1(75,200,75)  
+            hslider channel ("InputFilterOffset") range(-36,100,12,1,0.25) bounds(5,12,90,30) 
+            
+            button channel("inputApEnabled") value(0)  text("allpass state") bounds(105,40,90,14) colour:0("grey") colour:1(75,200,75)  
+            rslider channel ("inputAllpassOrder") range(2,16,8,1,2) bounds(110,15,20,20) 
+            rslider channel ("inputAllpassOffset") range(-36,48,3,1,0.5) bounds(140,0,20,20) 
+            rslider channel ("inputApFeedback") range(0,0.99,0.5,0.5,0.001) bounds(170,15,20,20)
+            
+          
+ 
     
        }
 }
@@ -33,7 +64,7 @@ image bounds(0,280,250,80) colour(0,0,0,0){
     rslider channel("voiceDecay") bounds(68,0,40,40) range(0,5000,10,0.25,0.001)
     rslider channel("voiceSustain") bounds(128,0,40,40) range(0,1,0.8,1,0.001)
     rslider channel("voiceRelease") bounds(188,0,40,40) range(5,5000,500,0.25,0.001)
-    hrange bounds(8,50,132,20) range(50, 3000, 100:250, 0.25, 1) channel("qMin","qMax")
+    hrange bounds(8,50,132,20) range(50, 5000, 100:250, 0.25, 1) channel("qMin","qMax")
     label text("q range") bounds(135,52,160,14) align("left") fontcolour(0,0,0,255)
 
     
@@ -98,7 +129,7 @@ combobox items("stereo", "discrete channels (24)") bounds(470,60,70,20) channel(
 ksmps = 32
 nchnls = 24
 0dbfs = 1
-
+giInputCh init 2
 gkVibrato[] init 4
 gaTrem[] init 4
 
@@ -117,10 +148,12 @@ gkRandomPitch init 0
 gkRandomGain init 0
 gkRandomQ init 0
 gkRandomPan init 0
-giSfTabs ftgen giSfTab, 0, 0, 1, "./impulses/env_hammer1.aif", 0, 0, 0 
+
 
 
 giBow1 ftgen 0, 0, 4096, 7, 1, 4096, 0; 
+
+giImpulse init 200
 
 opcode resonbank, aa, akiiiiikai
 //Resonant filters in parallel
@@ -166,7 +199,16 @@ opcode resonbank, aa, akiiiiikai
     iQRandom random -iQRandomAmount,iQRandomAmount
     kQ += iQRandom
     kQ limit kQ, 1, 6000
-    aTemp resonz aSig, kThisFreq, kQ
+    
+    if giInputCh == 3 then
+    
+    aResonIn inch iCount+1
+     
+    else 
+    aResonIn = aSig
+    endif
+    
+    aTemp resonz aResonIn, kThisFreq, kQ
     iTrem random 0, 1
     aThisTrem = gaTrem[0]*((iTrem)%1)+gaTrem[1]*((iTrem+0.25)%1)+gaTrem[2]*((iTrem+0.5)%1)+gaTrem[3]*((iTrem+0.75)%1)
     
@@ -310,31 +352,89 @@ kCount init 0
 kNum = 24
 
 
-
 SKIP:
-
+aIn = 0
 if iInputMode == 1 then
-    iSampleTime = tableng(1)/sr
+
+    iSampleTime = tableng(giImpulse)/sr
     aIndex line 0, iSampleTime, 1
 
-    aIn table3 aIndex, giSfTab, 1, 0, 0
-
-    aIn *= 0.005
+    aIn table3 aIndex, giImpulse, 1, 0, 0 
+    
+ 
+    
+    aIn *= 0.01
     
 elseif iInputMode == 2 then
-    kBowRate init 10
-    kBowRate randomi mtof(p4-24), mtof(p4-12), kBowRate
-    kBowAmp randomi 0.003, 0.005, kBowRate*0.25
-    aIn  poscil kBowAmp, kBowRate, giBow1
-    aIn = aIn-lowpass2(aIn, 50, 1)
-    aIn phaser1 aIn,  kBowRate*0.3, 4, 0.5
-elseif iInputMode == 3 then
+/// Bowed input 
+    iBowMode chnget "bowType"
+    if  iBowMode == 1 then
+        
+        kBowNoiseOffsetLow chnget "bowNoiseOffsetLow"
+        kBowNoiseOffsetHigh chnget "bowNoiseOffsetHigh"
+        
+        kBowRate init p4-i(kBowNoiseOffsetLow)
+        kBowRate randomi mtof(p4+kBowNoiseOffsetLow), mtof(p4+kBowNoiseOffsetHigh), kBowRate
+        kBowAmp randomi 0.5, 1., kBowRate*0.1
+        aIn  poscil kBowAmp, kBowRate, giBow1
+    elseif iBowMode == 2 then
+        kDustLow chnget "bowNoiseDenseLow"
+        kDustHigh chnget "bowNoiseDenseHigh"
+        kDensity randomi kDustLow, kDustHigh, (kDustLow+kDustLow)/2
+        aIn dust2 1, kDensity 
 
-    aIn = inch(1) + inch(2); 
+    elseif iBowMode == 3 then
+        kBeta chnget "bowNoiseBeta"
+        aIn noise 1, kBeta 
+        
+    elseif iBowMode == 4 then
+          
+    endif
+    
+    
     aIn *= 0.005
+    
+elseif iInputMode == 3 then
+    
+    giInputCh chnget "inputCh"
+    if giInputCh == 1 then
+    aIn = inch(1)*2    
+    elseif giInputCh == 2 then
+    aIn = inch(1) + inch(2)
+    else goto INPUTSKIP   
+    
+    
+    aIn *= 0.005
+   
+    endif
 
-endif 
+endif
+ //giInputCh = 1  //Changes things back to normal if input is not live 
+///Input Filtering
 
+    klpoffset chnget "InputFilterOffset"
+    ilpenabled chnget "inputFilterEnabled"
+    if ilpenabled == 1 then
+    
+    aFiltered = lowpass2(aIn, mtof(p4+klpoffset), 0.5)
+    iInputFilterMode chnget "inputFilterMode"
+        if iInputFilterMode == 0 then
+            aIn = aFiltered
+        else
+            aIn = aIn-aFiltered
+        endif
+    
+    endif
+    iApEnabled chnget "inputApEnabled"
+    if iApEnabled == 1 then
+        iOrder chnget "inputAllpassOrder"
+        kApOffset chnget "inputAllpassOffset"
+        kApFeedback chnget "inputApFeedback"
+    aIn phaser1 aIn, mtof(ftom(kBowRate)+kApOffset), iOrder, kApFeedback
+    endif
+
+aIn *= chnget("inputGain")*p5
+INPUTSKIP:
 aEnv transegr 0, iAttack, 1, 1, iDecay, 0, iSustain, iRelease, -1, 0 
 kPitch = p4
 
@@ -343,11 +443,8 @@ aOutL, aOutR resonbank aIn, kPitch, giNotes, iQsTab, giAmps, giPans, giEnabled,k
 aOutL *= aEnv
 aOutR *= aEnv
 
-aOutL lowpass2 aOutL, mtof(p4-3),2
-aOutR lowpass2 aOutR, mtof(p4-3),2
-
-gaOutL += aOutL*p5
-gaOutR += aOutR*p5
+gaOutL += aOutL
+gaOutR += aOutR
 
 
 endin
@@ -386,6 +483,8 @@ kRandomGain changed2 kRandomGainTrigger
 kRandomGain *= kRandomGainTrigger
 kRandomPan changed2 kRandomPanTrigger
 kRandomPan *= kRandomPanTrigger
+
+
 
 
 kCount = 0
@@ -429,7 +528,7 @@ if kRandomFreq == 1 then
     
         elseif kRandomMode == 2 then
     
-            kLastRand += rand(kRDepth*2+2)+(2+4*kRDepth2); 
+            kLastRand += rand(kRDepth*1+2)+(2+3*kRDepth2); 
     
         
     
@@ -488,6 +587,8 @@ gkOutputMode chnget "outputMode"
 gkQMin chnget "qMin"
 gkQMax chnget "qMax"
 
+/*
+//Old code for file select
 gSImpulseSelect chnget "impulseSelect"
 
 if changed(gSImpulseSelect) == 1 then
@@ -495,14 +596,139 @@ if changed(gSImpulseSelect) == 1 then
     event "i", "readSoundfile", 0, 0
     
 endif
+*/
+
+
+
+
+
+
+kInputMode chnget "inputMode"
+
+if changed(kInputMode)==1 then
+    if kInputMode == 1 then
+        chnset "visible(1)", "impulseInput"
+    else
+    chnset "visible(0)", "impulseInput"
+    endif
+    
+    if kInputMode == 2 then
+        chnset "visible(1)", "bowedInput"
+    else
+        chnset "visible(0)", "bowedInput"
+    endif
+
+    
+
+    
+    if kInputMode == 3 then
+    
+        
+            chnset "visible(1)", "liveInput"
+    else
+        chnset "visible(0)", "liveInput"
+    
+    endif
+
+endif 
+
+kBowType chnget "bowType"
+
+if changed(kBowType)==1 then
+
+    if kBowType == 1 then
+        chnset "visible(1)", "sawBowOptions"
+    else
+        chnset "visible(0)", "sawBowOptions"
+    
+    endif
+
+    if kBowType == 2 then
+        chnset "visible(1)", "dustBowOptions"
+    else
+        chnset "visible(0)", "dustBowOptions"
+    
+    endif
+    
+    if kBowType == 3 then
+    
+    
+           chnset "visible(1)", "bowNoise"
+    else
+        chnset "visible(0)", "bowNoise"
+    
+    
+    endif
+
+endif
+
+kCount = 1
+kImpulseLevels[] init 5
+kImpulseChange = 0
+kImpulseSlider init 0
+
+until kCount >=6 do 
+
+    kImpulseSlider chnget sprintfk("impulseSlider%d", kCount)
+    
+    if (kImpulseLevels[kCount-1]  != kImpulseSlider) then
+        kImpulseLevels[kCount-1] = kImpulseSlider
+        kImpulseChange = 1
+    endif
+
+    kCount += 1
+
+od
+
+if kImpulseChange == 1 then
+  event "i", "refreshImpusleTable", 0, 1
+
+endif
+
+kInputFilterType chnget "inputFilterMode"
+
+if changed(kInputFilterType)==1 then
+
+    if kInputFilterType == 0 then 
+    
+    chnset "text(lowpass)", "inputFilterModeIdent"
+    
+    elseif  kInputFilterType == 1 then 
+     chnset "text(highpass)", "inputFilterModeIdent"
+    
+    endif
+
+endif
+
 
 endin
 
-instr refresh
+instr refreshImpusleTable
+ iImpulseLevels[] init 5
+ 
+ iCount = 0
+ 
+ until iCount >=5 do 
+
+    iImpulseLevels[iCount] chnget sprintf("impulseSlider%d", iCount+1)
+    
+
+    iCount += 1
+
+od
 
 
+    
+    iImpulseLevels limit iImpulseLevels, 0.001, 1
+    
+ iImpulseStep = tableng(giImpulse)/4
+ giImpulse ftgen 200, 0, 2049, -5, iImpulseLevels[0], iImpulseStep, iImpulseLevels[1], iImpulseStep, iImpulseLevels[2], iImpulseStep, iImpulseLevels[3], iImpulseStep, iImpulseLevels[4] 
+
+ chnset "tablenumber(200)", "impulseTab"
+ 
+turnoff
 endin
-
+/*
 instr readSoundfile 
 
     if (strcmpk(gSImpulseSelect, "") != 0) then   
@@ -517,6 +743,7 @@ instr readSoundfile
     
 
 endin
+*/
 
  
 
@@ -580,6 +807,7 @@ endin
 <CsScore>
 ;causes Csound to run for about 7000 years...
 f0 z
+f 200 0 2049 -5 1 2000 0.0001 29
 f 201 0 2049 11 1
 f 202 0 2049 7 1 2048 -1 
 f 203 0 2049 7 0 1024 1 1024 -1
