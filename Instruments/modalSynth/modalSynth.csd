@@ -9,11 +9,15 @@ image colour(0,0,0,0) bounds(20, 50, 200,100) {
     //combobox bounds(0, 0, 100, 25), channel("preset"), populate("*.snaps")
     //filebutton bounds(110, 0, 60, 25), channel("but1"), text("Save"), mode("snapshot")
 }
-image bounds(20,50,740,60){
-    label bounds(0,0,100,14) text("Input Mode")
-    combobox bounds(0,15,100,14) items("impulse", "bow", "live input") channel("inputMode") align("centre")
-    rslider channel("inputGain") range(0.1,10,1,0.5,0.01) bounds(0,30,100,30)
-    image bounds(110,0,150,60) colour(200,0,0,255) identchannel("impulseInput") visible(1) active(1){
+image bounds(20,50,740,60) colour(0,0,0,0){
+    image bounds(0,0,150,60) colour(0,0,0,0){
+    label bounds(0,0,100,18) text("Input") fontcolour("black") align("left")
+    rslider channel("inputGain") range(0.1,10,1,0.5,0.01) bounds(0,20,40,40)
+    combobox bounds(50,30,70,20)  items("impulse", "bow", "live input") channel("inputMode") align("centre")
+
+    }
+    image bounds(170 ,0,150,60) colour(0,0,0,0){
+    image bounds(0 ,0,150,60) colour(200,0,0,255) identchannel("impulseInput") visible(1) active(1){
         gentable tablenumber(200) amprange(0, 1, 200, 0) active(0) bounds(10,10,125, 20) tablecolour("black") tablebackgroundcolour(0,0,0,0) tablegridcolour(0,0,0,0) identchannel("impulseTab")
         $impulseSlider value(1) channel("impulseSlider1")
         $impulseSlider bounds(35,35,20,20) channel("impulseSlider2")
@@ -22,7 +26,7 @@ image bounds(20,50,740,60){
         $impulseSlider bounds(110,35,20,20) channel("impulseSlider5")
     }
     
-    image bounds(110,0,150,60) colour(0,200,0,255) identchannel("bowedInput") visible(0) active(0){
+    image bounds(0,0,150,60) colour(0,200,0,255) identchannel("bowedInput") visible(0) active(0){
         label bounds(0,0,150,14) text("Bow Type") fontcolour("black")
 
         combobox bounds(25,15,100,14) channel("bowType") items("random saw", "random impulses", "noise")
@@ -31,14 +35,15 @@ image bounds(20,50,740,60){
         rslider channel("bowNoiseBeta") identchannel("bowNoise") range(-0.9, 0.9, 0, 1, 0.01) bounds(0,32,150,30) visible(0)
         }
         
-        image bounds(110,0,150,60) colour(0,200,0,255) identchannel("liveInput") visible(0) active(0){
+        image bounds(0,0,150,60) colour(0,200,0,255) identchannel("liveInput") visible(0) active(0){
                 combobox bounds(25,15,100,14) channel("inputCh") items("mono","stereo","24 channel") value(2)
 
+        }
         }
         
         
         
-        image identchannel("inputFilter") bounds(258,0,200,60) visible(1){
+        image identchannel("inputFilter") bounds(350,0,200,60) visible(1) colour(0,0,0,0){
             button channel("inputFilterMode")  text("") bounds(5,0,90,14) colour:0(50,100,100) colour:1(50,200,200) identchannel("inputFilterModeIdent") value(1) 
             button channel("inputFilterEnabled") value(0)  text("lp / hp state") bounds(5,40,90,14) colour:0("grey") colour:1(75,200,75)  
             hslider channel ("InputFilterOffset") range(-36,100,12,1,0.25) bounds(5,12,90,30) 
@@ -52,6 +57,11 @@ image bounds(20,50,740,60){
  
     
        }
+       image bounds(600,0,150,60) colour(0,0,0,0){
+       label text("output") bounds(0,0,100,18) align("left") fontcolour("black")
+       rslider channel("gain") bounds(0,20,40,40) range(0,2,1,0.5,0.01) trackercolour(255,0,0,255) outlinecolour(0,0,0,0) colour(0,0,0,0)
+        combobox items("stereo", "discrete channels (24)") bounds(50,30,70,20) channel("outputMode")
+}
 }
 
 image bounds(0,100,800,800) colour(0,0,0,0)
@@ -77,10 +87,12 @@ image bounds(0, 380, 200, 150)colour(0,0,0,0) {
     label text("Macro Buttons")  bounds(20,4,160,14)  fontcolour(0,0,0,255)
     button text("all on") bounds(20,25,75,20) channel("allOn") identchannel("allOn_ident") latched(0)
     button text("all off") bounds(105,25,75,20) channel("allOff") latched(0)
-    button text("randomize notes") bounds(20,50,160,20) channel("randNotes") latched(0)
-    button text("randomize q") bounds(20,75,160,20) channel("randQ")     latched(0)
-    button text("randomize gain") bounds(20,100,160,20) channel("randGain") latched(0)
-    button text("randomize pan") bounds(20,125,160,20) channel("randPan") latched(0)
+    //button text("randomize notes") bounds(20,50,160,20) channel("randNotes") latched(0)
+    //button text("randomize q") bounds(20,75,160,20) channel("randQ")     latched(0)
+    //button text("randomize gain") bounds(20,100,160,20) channel("randGain") latched(0)
+    //button text("randomize pan") bounds(20,125,160,20) channel("randPan") latched(0)
+    button text("randomize") bounds(20,50,160,20) channel("randAll") latched(0)
+    //filebutton text("import") bounds(20,75,160,20) channel("import") latched(0) populate("*.txt", "$HOME/")mode("file")
 }
 
 image colour(0,0,0,0) bounds(250,400,550,220){
@@ -109,8 +121,6 @@ vslider bounds(15,0,20,80) channel("trem") range(0,1,0,1,0.01)
 }
 
 keyboard bounds (110,0,350,80)
-rslider channel("gain") bounds(475,10,55,55) range(0,2,1,0.5,0.01) trackercolour(255,0,0,255) outlinecolour(0,0,0,0) colour(0,0,0,0)
-combobox items("stereo", "discrete channels (24)") bounds(470,60,70,20) channel("outputMode")
 
 }
 }
@@ -471,6 +481,10 @@ kRandomQTrigger chnget "randQ"
 kRandomGainTrigger chnget "randGain"
 kRandomPanTrigger chnget "randPan"
 
+kRandAllTrigger chnget "randAll"
+kRandAll changed2 kRandAllTrigger
+kRandAll *= kRandAllTrigger
+
 kAllOn changed2 kAllOnTrigger
 kAllOn *= kAllOnTrigger
 kAllOff changed2 kAllOffTrigger
@@ -494,7 +508,7 @@ kRandomMode = round(kRandomMode)
 
 until kCount >= 24 do
 
-if kAllOn == 1 then
+if (kAllOn == 1)|| (kRandAll == 1) then
 SName sprintfk "enable%d", kCount
 chnset k(1), SName
 endif
@@ -509,7 +523,7 @@ tabw chnget(SName), kCount, giPans
 endif
 
 
-if kRandomFreq == 1 then    
+if (kRandomFreq == 1) || (kRandAll == 1) then    
     
     if kCount == 0 then
         kLastRand = 0
@@ -551,7 +565,7 @@ endif
 
 
 
-if kRandomQ == 1 then
+if (kRandomQ == 1) || (kRandAll == 1)  then
 
     kQ = k(rand(0.5)+0.5)
     SName sprintfk "q%d", kCount
@@ -562,7 +576,7 @@ endif
 SName sprintfk "q%d", kCount
 tabw chnget(SName), kCount, giQs
 
-if kRandomGain == 1 then
+if (kRandomGain == 1) || (kRandAll == 1)  then
     kGain = k(rand(0.45))+0.45+0.1
     SName sprintfk "gain%d", kCount
     chnset kGain, SName
@@ -570,7 +584,7 @@ if kRandomGain == 1 then
 
 
 
-if kRandomPan == 1 then
+if (kRandomPan == 1) || (kRandAll == 1)  then
     kPan = k(rand(0.5))+0.5
     SName sprintfk "pan%d", kCount
     chnset kPan, SName
@@ -745,7 +759,27 @@ instr readSoundfile
 endin
 */
 
+instr importPartials
+
+iCount = 0
+
+until iCount >= 24 do
+
+    //readfi 
+    iline = 0
+    if iline == -1 then
+    
+    iCount = 24
+    
+    else
+
+    iCount += 1 
+    
+    endif
+
+od
  
+endin 
 
 instr lfoDrive
     gkRandomPitch chnget "randomPitchPerNote"
