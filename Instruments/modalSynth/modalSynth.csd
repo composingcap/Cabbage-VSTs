@@ -1,18 +1,25 @@
 <Cabbage>
 
-#define impulseSlider rslider bounds(10,35,20,20) range(0.0001,1,0.0001,1,0.0001) colour(0,0,0,0) trackercolour("white") trackerthickness(2)
+#define impulseSlider rslider bounds(10,35,20,20) range(0.0001,1,0.0001,1,0.0001) colour(0,0,0,0) trackercolour("white") trackerthickness(2) trackeroutsideradius(1) trackerinsideradius(0)
 
-form caption("Modal Synth") size(800, 800), colour("whitesmoke"), pluginid("cpmd"), import( "./lfo.plant", "./modalSynthPlants.plant"), bundle("./lfo.plant", "./modalSynthPlants.plant")
+#define defaultSlider rslider trackeroutsideradius(1) trackerinsideradius(0) trackercolour(180,0,0) outlinecolour(255,200,200) markerstart(0) markerend(1)
+
+form caption("Modal Synth") size(800, 700), colour("whitesmoke"), pluginid("cpmd"), import("./modalSynthPlants.plant"), bundle("./modalSynthPlants.plant", "./modalSynth.snaps")
 
 label text("Modal Synth") bounds(20,10,500,36) align("left") fontcolour("black")
 image colour(0,0,0,0) bounds(20, 50, 200,100) {
-    //combobox bounds(0, 0, 100, 25), channel("preset"), populate("*.snaps")
-    //filebutton bounds(110, 0, 60, 25), channel("but1"), text("Save"), mode("snapshot")
+    combobox bounds(0, 0, 100, 25), channel("preset"), populate("*.snaps") directory("./")
+    filebutton bounds(110, 0, 60, 25), channel("but1"), text("Save"), mode("snapshot")
 }
-image bounds(20,50,740,60) colour(0,0,0,0){
+
+
+image bounds(0,100,800,800) colour(0,0,0,0)
+{
+
+image bounds(20,0,740,60) colour(0,0,0,0){
     image bounds(0,0,150,60) colour(0,0,0,0){
     label bounds(0,0,100,18) text("Input") fontcolour("black") align("left")
-    rslider channel("inputGain") range(0.1,10,1,0.5,0.01) bounds(0,20,40,40)
+    $defaultSlider channel("inputGain") range(0.1,10,1,0.5,0.01) bounds(0,20,40,40) 
     combobox bounds(50,30,70,20)  items("impulse", "bow", "live input") channel("inputMode") align("centre")
 
     }
@@ -26,16 +33,25 @@ image bounds(20,50,740,60) colour(0,0,0,0){
         $impulseSlider bounds(110,35,20,20) channel("impulseSlider5")
     }
     
-    image bounds(0,0,150,60) colour(0,200,0,255) identchannel("bowedInput") visible(0) active(0){
+    image bounds(0,0,150,60) colour(0,200,0,255) identchannel("bowedInput") visible(0) active(1){
         label bounds(0,0,150,14) text("Bow Type") fontcolour("black")
 
         combobox bounds(25,15,100,14) channel("bowType") items("random saw", "random impulses", "noise")
-        hrange channel("bowNoiseOffsetLow", "bowNoiseOffsetHigh") identchannel("sawBowOptions") range(-36,24, -24:-12, 1, 0.5) bounds(15,30,140,20) visible(0)
-        hrange channel("bowNoiseDenseLow", "bowNoiseDenseHigh") identchannel("dustBowOptions") range(10,500, 2:5, 0.5, 0.001) bounds(15,30,140,30) visible(0)
-        rslider channel("bowNoiseBeta") identchannel("bowNoise") range(-0.9, 0.9, 0, 1, 0.01) bounds(0,32,150,30) visible(0)
+        //hrange channel("bowNoiseOffsetLow", "bowNoiseOffsetHigh") identchannel("sawBowOptions") range(-36,24, -24:-12, 1, 0.5) bounds(15,30,140,20) visible(0)
+        image identchannel("sawBowOptions") bounds(45,35,50,20) visible(0) colour(0,0,0,0){
+            $impulseSlider range(-36,24, -24, 1, 0.5) channel("bowNoiseOffsetLow") bounds(0, 0, 20,20)
+            $impulseSlider range(-36,24, -12, 1, 0.5) channel("bowNoiseOffsetHigh") bounds(30, 0, 20,20)
+        }
+        //hrange channel("bowNoiseDenseLow", "bowNoiseDenseHigh") identchannel("dustBowOptions") range(10,500, 2:5, 0.5, 0.001) bounds(15,30,140,30) visible(0)
+            image identchannel("dustBowOptions") bounds(45,35,50,20) visible(0) colour(0,0,0,0){
+            $impulseSlider range(10,500, 10, 0.5, 0.001) channel("bowNoiseDenseLow") bounds(0, 0, 20,20)
+            $impulseSlider range(10,500, 50, 0.5, 0.001) channel("bowNoiseDenseHigh") bounds(30, 0, 20,20)
         }
         
-        image bounds(0,0,150,60) colour(0,200,0,255) identchannel("liveInput") visible(0) active(0){
+        $impulseSlider channel("bowNoiseBeta") identchannel("bowNoise") range(-0.9, 0.9, 0, 1, 0.01) bounds(0,32,150,30) visible(0) 
+        }
+        
+        image bounds(0,0,150,60) colour(0,200,0,255) identchannel("liveInput") visible(0) active(1){
                 combobox bounds(25,15,100,14) channel("inputCh") items("mono","stereo","24 channel") value(2)
 
         }
@@ -44,38 +60,42 @@ image bounds(20,50,740,60) colour(0,0,0,0){
         
         
         image identchannel("inputFilter") bounds(350,0,200,60) visible(1) colour(0,0,0,0){
-            button channel("inputFilterMode")  text("") bounds(5,0,90,14) colour:0(50,100,100) colour:1(50,200,200) identchannel("inputFilterModeIdent") value(1) 
-            button channel("inputFilterEnabled") value(0)  text("lp / hp state") bounds(5,40,90,14) colour:0("grey") colour:1(75,200,75)  
+            button channel("inputFilterMode")  text("") bounds(5,0,90,14) colour:0(180,20,20) colour:1(200,100,100) identchannel("inputFilterModeIdent") value(1) 
+            button channel("inputFilterEnabled") value(0)  text("lp / hp state") bounds(5,40,90,14) colour:0("grey") colour:1(200,80,80)  
             hslider channel ("InputFilterOffset") range(-36,100,12,1,0.25) bounds(5,12,90,30) 
             
-            button channel("inputApEnabled") value(0)  text("allpass state") bounds(105,40,90,14) colour:0("grey") colour:1(75,200,75)  
-            rslider channel ("inputAllpassOrder") range(2,16,8,1,2) bounds(110,15,20,20) 
-            rslider channel ("inputAllpassOffset") range(-36,48,3,1,0.5) bounds(140,0,20,20) 
-            rslider channel ("inputApFeedback") range(0,0.99,0.5,0.5,0.001) bounds(170,15,20,20)
+            button channel("inputApEnabled") value(0)  text("allpass state") bounds(105,40,90,14) colour:0("grey") colour:1(200,80,80)  
+            $defaultSlider channel ("inputAllpassOrder") range(2,16,8,1,2) bounds(110,15,20,20) 
+            $defaultSlider channel ("inputAllpassOffset") range(-36,48,3,1,0.5) bounds(140,0,20,20) 
+            $defaultSlider channel ("inputApFeedback") range(0,0.99,0.5,0.5,0.001) bounds(170,15,20,20) 
             
           
  
     
        }
-       image bounds(600,0,150,60) colour(0,0,0,0){
+       image bounds(600,0,150,60) colour(0,,0,0){
        label text("output") bounds(0,0,100,18) align("left") fontcolour("black")
-       rslider channel("gain") bounds(0,20,40,40) range(0,2,1,0.5,0.01) trackercolour(255,0,0,255) outlinecolour(0,0,0,0) colour(0,0,0,0)
+       $defaultSlider channel("gain") bounds(0,20,40,40) range(0,2,1,0.5,0.01) trackercolour(255,0,0,255) outlinecolour(0,0,0,0) colour(0,0,0,0) 
         combobox items("stereo", "discrete channels (24)") bounds(50,30,70,20) channel("outputMode")
 }
 }
 
-image bounds(0,100,800,800) colour(0,0,0,0)
-{
-modalSynthMatrix namespace("cp"), bounds(0,0,800,280) 
+
+modalSynthMatrix namespace("cp"), bounds(0,100,800,280) 
 
 
-image bounds(0,280,250,80) colour(0,0,0,0){
-    rslider channel("voiceAttack") bounds(8,0,40,40) range(5,5000,10,0.25,0.001)
-    rslider channel("voiceDecay") bounds(68,0,40,40) range(0,5000,10,0.25,0.001)
-    rslider channel("voiceSustain") bounds(128,0,40,40) range(0,1,0.8,1,0.001)
-    rslider channel("voiceRelease") bounds(188,0,40,40) range(5,5000,500,0.25,0.001)
-    hrange bounds(8,50,132,20) range(50, 5000, 100:250, 0.25, 1) channel("qMin","qMax")
-    label text("q range") bounds(135,52,160,14) align("left") fontcolour(0,0,0,255)
+image bounds(24,400,250,80) colour(0,0,0,0){
+    label text("ADSR") bounds (0,0,200,18) align("left") fontcolour("black")
+    $defaultSlider channel("voiceAttack") bounds(8,24,30,30) range(5,5000,10,0.25,0.001) 
+    $defaultSlider channel("voiceDecay") bounds(48,24,30,30) range(0,5000,10,0.25,0.001) 
+    $defaultSlider channel("voiceSustain") bounds(88,24,30,30) range(0,1,0.8,1,0.001) 
+    $defaultSlider channel("voiceRelease") bounds(128,24,30,30) range(5,5000,500,0.25,0.001) 
+    //hrange bounds(8,50,132,20) range(50, 5000, 100:250, 0.25, 1) channel("qMin","qMax")
+    image bounds(55,60,132,20) visible(1) colour(0,0,0,0){
+         $defaultSlider range(50, 5000, 100, 0.25, 1) channel("qMin") bounds(0, 0, 20,20)
+         $defaultSlider range(50, 5000, 250, 0.25, 1) channel("qMax") bounds(30, 0, 20,20)
+        }
+    label text("q range") bounds(125,63,160,14) align("left") fontcolour(0,0,0,255)
 
     
 
@@ -83,10 +103,10 @@ image bounds(0,280,250,80) colour(0,0,0,0){
 
 
 
-image bounds(0, 380, 200, 150)colour(0,0,0,0) {
-    label text("Macro Buttons")  bounds(20,4,160,14)  fontcolour(0,0,0,255)
-    button text("all on") bounds(20,25,75,20) channel("allOn") identchannel("allOn_ident") latched(0)
-    button text("all off") bounds(105,25,75,20) channel("allOff") latched(0)
+image bounds(580, 400, 200, 150)colour(0,0,0,0) {
+    label text("Macro Buttons")  bounds(20,0,160,18)  fontcolour(0,0,0,255)
+    button text("all on") bounds(20,24,75,20) channel("allOn") identchannel("allOn_ident") latched(0)
+    button text("all off") bounds(105,24,75,20) channel("allOff") latched(0)
     //button text("randomize notes") bounds(20,50,160,20) channel("randNotes") latched(0)
     //button text("randomize q") bounds(20,75,160,20) channel("randQ")     latched(0)
     //button text("randomize gain") bounds(20,100,160,20) channel("randGain") latched(0)
@@ -95,32 +115,34 @@ image bounds(0, 380, 200, 150)colour(0,0,0,0) {
     //filebutton text("import") bounds(20,75,160,20) channel("import") latched(0) populate("*.txt", "$HOME/")mode("file")
 }
 
-image colour(0,0,0,0) bounds(250,400,550,220){
-    rslider channel("randomPitchPerNote") range(0,12,0,0.5,0.01) bounds(0,0,50,50)
-    rslider channel("randomQPerNote") range(0,1000,0,0.5,0.01) bounds(60,0,50,50)
-    rslider channel("randomGainPerNote") range(0,1,0,0.5,0.01) bounds(120,0,50,50)
-    rslider channel("randomPanPerNote") range(0,1,0,0.5,0.01) bounds(180,0,50,50)
+image colour(0,0,0,0) bounds(320,400,200,200){
+    label text("Random Deviations") bounds (0,0,200,18) align("left") fontcolour("black")
+    $defaultSlider channel("randomPitchPerNote") range(0,12,0,0.5,0.01) bounds(0,24,30,30) 
+    $defaultSlider channel("randomQPerNote") range(0,1,0,0.5,0.01) bounds(40,24,30,30) 
+    $defaultSlider channel("randomGainPerNote") range(0,1,0,0.5,0.01) bounds(80,24,30,30)
+    $defaultSlider channel("randomPanPerNote") range(0,1,0,0.5,0.01) bounds(120,24,30,30) 
+    button text("key tracked")  bounds(20,60,100,14) channel("keyTrack") identchannel("keyTrackIdent") colour:1(100,100,255)
 
     }
 
 
-image bounds(250,280,550,80) colour(0,0,0,0){
+image bounds(24,500,800,80) colour(0,0,0,0){
     image bounds(15,0, 40, 80) colour(0,0,0,0){
-        rslider bounds(0,0,20,20) channel("vibratoRate") range(0.001,15,1, 0.25,0.01)
-        rslider bounds(0,20,20,20) channel("vibratoDepth") range(1,12,3,1,0.01)
-        rslider bounds(0,40,20,20) channel("vibratoDeviation") range(0,1,0.1,1,0.01)
-        vslider bounds(15,0,20,80) channel("vibrato") range(0,1,0,1,0.01)
+        $defaultSlider bounds(0,0,20,20) channel("vibratoRate") range(0.001,15,1, 0.25,0.01)
+        $defaultSlider bounds(0,20,20,20) channel("vibratoDepth") range(1,12,3,1,0.01) 
+        $defaultSlider bounds(0,40,20,20) channel("vibratoDeviation") range(0,1,0.1,1,0.01) 
+        vslider bounds(15,0,20,80) channel("vibrato") range(0,1,0,1,0.01) colour(0,0,0)
         }
 
 image bounds(70,0, 40, 80) colour(0,0,0,0){
-rslider bounds(0,0,20,20) channel("tremRate") range(0.001,15,1, 0.25,0.01)
-rslider bounds(0,40,20,20) channel("tremDeviation") range(0,1,0.1,1,0.01)
-vslider bounds(15,0,20,80) channel("trem") range(0,1,0,1,0.01)
+$defaultSlider bounds(0,0,20,20) channel("tremRate") range(0.001,15,1, 0.25,0.01) 
+$defaultSlider bounds(0,40,20,20) channel("tremDeviation") range(0,1,0.1,1,0.01)
+vslider bounds(15,0,20,80) channel("trem") range(0,1,0,1,0.01) colour(0,0,0)
 
 
 }
 
-keyboard bounds (110,0,350,80)
+keyboard bounds (110,0,624,80) blacknotecolour(25,0,0) whitenotecolour(220,120,120) arrowbackgroundcolour(0,0,0,0) keysdowncolour(255,200,200,255) arrowcolour("black") mouseoverkeycolour(255,200,200,255)
 
 }
 }
@@ -142,6 +164,7 @@ nchnls = 24
 giInputCh init 2
 gkVibrato[] init 4
 gaTrem[] init 4
+gaIns[] init 2;
 
 giSfTab init 1
 gkOutputMode init 1
@@ -158,7 +181,7 @@ gkRandomPitch init 0
 gkRandomGain init 0
 gkRandomQ init 0
 gkRandomPan init 0
-
+gkKeyTracked init 0
 
 
 giBow1 ftgen 0, 0, 4096, 7, 1, 4096, 0; 
@@ -187,12 +210,19 @@ opcode resonbank, aa, akiiiiikai
         if iCount >= iNumber goto RESONSKIP
         goto RESONTOP           
     endif
-    
+    iKeyTracked = i(gkKeyTracked)
+    if iKeyTracked == 1 then
+        seed p4+iCount*50
+    elseif  iKeyTracked == 0 then
+        seed 0
+    endif 
+      
     iNote tab_i iCount, iNotesTab
     iVib random 0, 1
     iRandomPitchDepth = i(gkRandomPitch);
     if (iCount != 0) then
-    iRandomPitch random -iRandomPitchDepth, iRandomPitchDepth
+    iRandomPitch unirand iRandomPitchDepth*2
+    iRandomPitch -= iRandomPitchDepth 
     else
     iRandomPitch = 0
     endif 
@@ -201,21 +231,36 @@ opcode resonbank, aa, akiiiiikai
     kThisFreq = mtof(kThisNote)
     
     GETQ:    
-    kQ = kThisFreq/tab_i(iCount, iQsTab)
+    kQ = tab_i(iCount, iQsTab)
+
+    iQRandomAmount = i(gkRandomQ)
+    iQRandom unirand iQRandomAmount
+    
+    kQ = kQ+iQRandom*2000
+    
+    kQ = kThisFreq/kQ
+    
+    //printk2 kQ
+    iPan tab_i iCount, iPansTab
+    iRandomPanAmount = i(gkRandomPan)
+    iRandomPan trirand iRandomPanAmount
+    iPan = mirror(iPan+iRandomPan, 0, 1)
+        
     if qnan(kQ) == 1 then 
         kQ = kThisFreq/150;
     endif 
-    iQRandomAmount = i(gkRandomQ)
-    iQRandom random -iQRandomAmount,iQRandomAmount
-    kQ += iQRandom
-    kQ limit kQ, 1, 6000
     
-    if giInputCh == 3 then
-    
-    aResonIn inch iCount+1
+    if giInputCh == 1 then
+        aResonIn = gaIns[0]+gaIns[1]
+        
+    elseif giInputCh == 2 then
+        aResonIn = gaIns[0]*(1-iPan)+gaIns[1]*iPan
+        
+    elseif giInputCh == 3 then    
+        aResonIn inch iCount+1
      
     else 
-    aResonIn = aSig
+        aResonIn = aSig
     endif
     
     aTemp resonz aResonIn, kThisFreq, kQ
@@ -223,20 +268,20 @@ opcode resonbank, aa, akiiiiikai
     aThisTrem = gaTrem[0]*((iTrem)%1)+gaTrem[1]*((iTrem+0.25)%1)+gaTrem[2]*((iTrem+0.5)%1)+gaTrem[3]*((iTrem+0.75)%1)
     
     iRandomGainAmount = i(gkRandomGain)
-    iRandomGain random 1, 1-iRandomGainAmount
+    iRandomGain unirand iRandomGainAmount
+    iRandomGain = 1-iRandomGain
 
     aGain = (iGain*iRandomGain)*(1-aThisTrem)
     aGain limit aGain, 0 ,1
     aTemp *= aGain
     
     
+    
+
     if (kOutputMode == 1) then
-    iPan tab_i iCount, iPansTab
-        iRandomPanAmount = i(gkRandomPan)
-        iRandomPan random -iRandomPanAmount,iRandomPanAmount
-        iPan = (iPan+iRandomPan)%1
         aOutL = aTemp*(1-iPan)
         aOutR = aTemp*(iPan)
+        //prints "pan %d: %f \n", iCount, iPan; 
         
     elseif (kOutputMode == 2) then
         outch iCount+1, aTemp*aEnv
@@ -363,6 +408,7 @@ kNum = 24
 
 
 SKIP:
+giInputCh = 0;
 aIn = 0
 if iInputMode == 1 then
 
@@ -407,21 +453,59 @@ elseif iInputMode == 2 then
 elseif iInputMode == 3 then
     
     giInputCh chnget "inputCh"
-    if giInputCh == 1 then
-    aIn = inch(1)*2    
-    elseif giInputCh == 2 then
-    aIn = inch(1) + inch(2)
-    else goto INPUTSKIP   
+    
+      
+    aIn inch 1
+    gaIns[0] = aIn
+    aIn inch 2
+    gaIns[1] = aIn
     
     
-    aIn *= 0.005
-   
+    gaIns = gaIns*chnget("inputGain")*p5
+    
+    
+    
+    klpoffset chnget "InputFilterOffset"
+    ilpenabled chnget "inputFilterEnabled"
+    if ilpenabled == 1 then
+    aIn = gaIns[0]
+    aFiltered = lowpass2(aIn, mtof(p4+klpoffset), 0.5)
+    iInputFilterMode chnget "inputFilterMode"
+        if iInputFilterMode == 0 then
+            gaIns[0] = aFiltered
+        else
+            gaIns[0]= gaIns[0]-aFiltered
+        endif   
+        aIn = gaIns[1]
+     aFiltered = lowpass2(aIn, mtof(p4+klpoffset), 0.5)
+    iInputFilterMode chnget "inputFilterMode"
+        if iInputFilterMode == 0 then
+            gaIns[1] = aFiltered
+        else
+            gaIns[1]= gaIns[1]-aFiltered
+        endif 
     endif
+    
+    iApEnabled chnget "inputApEnabled"
+    if iApEnabled == 1 then
+        iOrder chnget "inputAllpassOrder"
+        kApOffset chnget "inputAllpassOffset"
+        kApFeedback chnget "inputApFeedback"
+        aIn = gaIns[0]
+    aPhasor phaser1 aIn, mtof(ftom(kBowRate)+kApOffset), iOrder, kApFeedback
+    gaIns[0] = aPhasor
+        aIn = gaIns[1]
+    aPhasor phaser1 aIn, mtof(ftom(kBowRate)+kApOffset), iOrder, kApFeedback
+    gaIns[1] = aPhasor
+    endif
+    
+   aIn = 0
+    
 
 endif
  //giInputCh = 1  //Changes things back to normal if input is not live 
 ///Input Filtering
-
+    if iInputMode != 3 then
     klpoffset chnget "InputFilterOffset"
     ilpenabled chnget "inputFilterEnabled"
     if ilpenabled == 1 then
@@ -441,6 +525,7 @@ endif
         kApOffset chnget "inputAllpassOffset"
         kApFeedback chnget "inputApFeedback"
     aIn phaser1 aIn, mtof(ftom(kBowRate)+kApOffset), iOrder, kApFeedback
+    endif
     endif
 
 aIn *= chnget("inputGain")*p5
@@ -463,6 +548,10 @@ instr io
 kGain chnget "gain"
 aGain interp kGain
 
+
+gaOutL lowpass2 gaOutL, sr/2.01, 1
+gaOutR lowpass2 gaOutR, sr/2.01, 1
+
 outs gaOutL*aGain, gaOutR*aGain
 clear gaOutL, gaOutR
 
@@ -473,7 +562,7 @@ endin
 instr update
 
 
-
+gkKeyTracked chnget "keyTrack"
 kAllOnTrigger chnget "allOn"
 kAllOffTrigger chnget "allOff"
 kRandomFreqTrigger chnget "randNotes"
@@ -500,10 +589,9 @@ kRandomPan *= kRandomPanTrigger
 
 
 
-
 kCount = 0
-kRandomMode random 0, 3
-kRandomMode = round(kRandomMode)
+kRandomMode rand 1.5, 2
+kRandomMode = round(kRandomMode+1.5)
 
 
 until kCount >= 24 do
@@ -527,22 +615,22 @@ if (kRandomFreq == 1) || (kRandAll == 1) then
     
     if kCount == 0 then
         kLastRand = 0
-        kRDepth = rand(0.5)+0.5
-        kRDepth2 = rand(0.5)+0.5
+        kRDepth = rand(0.5)+0.5, 2
+        kRDepth2 = rand(0.5)+0.5, 2
     else
         if kRandomMode == 0 then
                 if k(rand(1))<0.5 then
-            kLastRand += rand(0.25+0.25*kRDepth)+0.25+kRDepth2*0.25
+            kLastRand += rand(0.25+0.25*kRDepth, 2)+0.25+kRDepth2*0.25
         else
-            kLastRand += rand(3+3*kRDepth)+3+4*kRDepth2
+            kLastRand += rand(3+3*kRDepth, 2)+3+4*kRDepth2
         endif
         
         elseif kRandomMode == 1 then
-            kLastRand += rand(0.5+2*kRDepth)+2*kRDepth2+0.5; 
+            kLastRand += rand(0.5+2*kRDepth, 2)+2*kRDepth2+0.5; 
     
         elseif kRandomMode == 2 then
     
-            kLastRand += rand(kRDepth*1+2)+(2+3*kRDepth2); 
+            kLastRand += rand(kRDepth*1+2, 2)+(2+3*kRDepth2); 
     
         
     
@@ -554,7 +642,7 @@ if (kRandomFreq == 1) || (kRandAll == 1) then
         else
             kStep = kStep*0.5;
         endif
-        kLastRand += kStep + rand(kRDepth*3);
+        kLastRand += kStep + rand(kRDepth*3, 2);
     
     endif
     endif
@@ -567,7 +655,7 @@ endif
 
 if (kRandomQ == 1) || (kRandAll == 1)  then
 
-    kQ = k(rand(0.5)+0.5)
+    kQ = k(rand(0.5)+0.5, 2)
     SName sprintfk "q%d", kCount
     chnset kQ, SName
 
@@ -577,7 +665,7 @@ SName sprintfk "q%d", kCount
 tabw chnget(SName), kCount, giQs
 
 if (kRandomGain == 1) || (kRandAll == 1)  then
-    kGain = k(rand(0.45))+0.45+0.1
+    kGain = k(rand(0.45, 2))+0.45+0.1
     SName sprintfk "gain%d", kCount
     chnset kGain, SName
     endif
@@ -585,7 +673,7 @@ if (kRandomGain == 1) || (kRandAll == 1)  then
 
 
 if (kRandomPan == 1) || (kRandAll == 1)  then
-    kPan = k(rand(0.5))+0.5
+    kPan = k(rand(, 2))+0.5
     SName sprintfk "pan%d", kCount
     chnset kPan, SName
     endif
