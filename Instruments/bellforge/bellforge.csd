@@ -113,6 +113,7 @@ image bounds(580, 400, 200, 150)colour(0,0,0,0) {
     //button text("randomize pan") bounds(20,125,160,20) channel("randPan") latched(0)
     button text("randomize") bounds(20,50,160,20) channel("randAll") latched(0)
     //filebutton text("import") bounds(20,75,160,20) channel("import") latched(0) populate("*.txt", "$HOME/")mode("file")
+    button text("randomize states") bounds(20,75,160,20) channel("randOnOff") latched(0)
 }
 
 image colour(0,0,0,0) bounds(320,400,200,200){
@@ -122,6 +123,7 @@ image colour(0,0,0,0) bounds(320,400,200,200){
     $defaultSlider channel("randomGainPerNote") range(0,1,0,0.5,0.01) bounds(80,24,30,30)
     $defaultSlider channel("randomPanPerNote") range(0,1,0,0.5,0.01) bounds(120,24,30,30) 
     button text("key tracked")  bounds(20,60,100,14) channel("keyTrack") identchannel("keyTrackIdent") colour:1(100,100,255)
+    button text("randomize states")  bounds(20,80,100,14) channel("randStateNote") identchannel("randStateNoteIdent") colour:1(100,100,255)
 
     }
 
@@ -182,7 +184,7 @@ gkRandomGain init 0
 gkRandomQ init 0
 gkRandomPan init 0
 gkKeyTracked init 0
-
+gkRandOnOffNote init 0
 
 giBow1 ftgen 0, 0, 4096, 7, 1, 4096, 0; 
 
@@ -395,6 +397,12 @@ iRelease *= 0.001
 
 iInputMode chnget "inputMode"
 
+iRandNoteState init 0
+iRandNoteState chnget "randStateNote"
+
+gkRandOnOffNote = changed(iRandNoteState)
+
+
 
 kOutputMode = gkOutputMode
 
@@ -563,12 +571,15 @@ instr update
 
 
 gkKeyTracked chnget "keyTrack"
+
 kAllOnTrigger chnget "allOn"
 kAllOffTrigger chnget "allOff"
 kRandomFreqTrigger chnget "randNotes"
 kRandomQTrigger chnget "randQ"
 kRandomGainTrigger chnget "randGain"
 kRandomPanTrigger chnget "randPan"
+kRandOnOff chnget "randOnOff"
+
 
 kRandAllTrigger chnget "randAll"
 kRandAll changed2 kRandAllTrigger
@@ -586,19 +597,32 @@ kRandomGain changed2 kRandomGainTrigger
 kRandomGain *= kRandomGainTrigger
 kRandomPan changed2 kRandomPanTrigger
 kRandomPan *= kRandomPanTrigger
+kRandonOffChange changed kRandOnOff
+
 
 
 
 kCount = 0
 kRandomMode rand 1.5, 2
 kRandomMode = round(kRandomMode+1.5)
-
+kRand2 = rand(750)
 
 until kCount >= 24 do
 
 if (kAllOn == 1)|| (kRandAll == 1) then
 SName sprintfk "enable%d", kCount
 chnset k(1), SName
+endif
+
+if ((kRandOnOff == 1 && kRandonOffChange == 1) || gkRandOnOffNote==1 ) then
+    SName sprintfk "enable%d", kCount 
+    kSet = 0
+    kRand1 rand 1000
+    
+    if (kRand1 > kRand2) then
+        kSet = 1
+    endif   
+    chnset kSet, SName
 endif
 
 if kAllOff == 1 then
@@ -688,6 +712,7 @@ gkOutputMode chnget "outputMode"
 
 gkQMin chnget "qMin"
 gkQMax chnget "qMax"
+gkRandOnOffNote = 0
 
 /*
 //Old code for file select
