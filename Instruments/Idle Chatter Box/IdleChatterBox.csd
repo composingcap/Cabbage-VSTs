@@ -1,11 +1,11 @@
 <Cabbage>
-form caption("Idle Chatter Box") size(400, 180), colour("grey"), pluginid("chtr")
+form caption("Idle Chatter Box") size(400, 180), colour("grey"), pluginId("chtr")
 bundle("Atari.lpc", "BassClarinetSounds.lpc", "Child.lpc", "FemVoice.lpc", "Italian.lpc", "Medevil.lpc", "OboeMultiphonics.lpc", "Protection.lpc", "Xavier.lpc") 
 keyboard bounds(142, 10, 250, 80)
-rslider bounds(8, 10, 80, 40) text("Grain Period") range(0.03125, 1, 0.25, 1, 0.03125)  channel("period") trackercolour("black") textcolour("black")
-rslider bounds(8, 50, 80, 40) text("Grain Length") range(0.03125, 1, 0.125, 1, 0.03125)  channel("len") trackercolour("black") textcolour("black")
-rslider bounds(70, 10, 80, 40) text("Random") range(0, 1, 0, 1, 0.0675)  channel("periodR") trackercolour("black") textcolour("black")
-rslider bounds(70, 50, 80, 40) text("Random") range(0, 1, 0, 1, 0.0675)  channel("lenR") trackercolour("black") textcolour("black")
+rslider bounds(8, 10, 80, 40) text("Grain Period") range(0.03125, 1, 0.25, 1, 0.03125)  channel("period") trackerColour("black") textColour("black")
+rslider bounds(8, 50, 80, 40) text("Grain Length") range(0.03125, 1, 0.125, 1, 0.03125)  channel("len") trackerColour("black") textColour("black")
+rslider bounds(70, 10, 80, 40) text("Random") range(0, 1, 0, 1, 0.0675)  channel("periodR") trackerColour("black") textColour("black")
+rslider bounds(70, 50, 80, 40) text("Random") range(0, 1, 0, 1, 0.0675)  channel("lenR") trackerColour("black") textColour("black")
 combobox channel("lpcFile") items("FemVoice", "Atari", "Child", "Italian", "Medevil", "Protection", "Xavier", "OboeMultiphonics", "BassClarinetSounds") mode(1) bounds(8,100,75,14)
 groupbox text("grain envelope") bounds(100,100,130,70){
     label bounds(15,25,150,17) text("A    D    S    R") align("left")

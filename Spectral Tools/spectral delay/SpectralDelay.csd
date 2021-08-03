@@ -1,20 +1,20 @@
 <Cabbage>
-form caption("Spectral Delay") size(1208, 510), colour(58, 110, 182), pluginid("spdl") colour(47, 79, 79)
+form caption("Spectral Delay") size(1208, 510), colour(58, 110, 182), pluginId("spdl") colour(47, 79, 79)
 filebutton text("load table list") bounds(1000,8,80,30) channel("loadFile") file("SpecDelDef.specdel") value(0) mode("file") populate("*.specdel")
 filebutton text("save table list") bounds(1100,8,80,30) channel("saveFile") file("SpecDelDef.specdel") value(0) mode("save")
 image bounds(8,50,1200,150)colour(0,0,0,0){
     label text("A") bounds(5,20,20,20)
     label text("M") bounds(5,50,20,20)
     label text("P") bounds(5,80,20,20)
-    gentable tablenumber(101) bounds(50,0,942, 140) amprange(0,1, 101, 0.01) identchannel("ampTab") tablegridcolour(0,0,0,0) tablecolour:N(72, 209, 204) tablebackgroundcolour(27, 59, 59)
+    gentable tableNumber(101) bounds(50,0,942, 140) ampRange(0,1, 101, 0.01) identChannel("ampTab") tableGridColour(0,0,0,0) tableColour:N(72, 209, 204) tablebackgroundColour(27, 59, 59)
     combobox  channel("ampGenMethod") bounds(1000,120,50,20) items("rand","gaus","cos","slope", "zero")
-    hslider channel("ampGenArg") identchannel("ampGenArg_ID")  range(0,1,0.5,1, 0.01), bounds(1050,120,60,20) visible(0)
-    label identchannel("ampGenArgText"), text(" "), bounds (1110,125,50,10) align("left")
+    hslider channel("ampGenArg") identChannel("ampGenArg_ID")  range(0,1,0.5,1, 0.01), bounds(1050,120,60,20) visible(0)
+    label identChannel("ampGenArgText"), text(" "), bounds (1110,125,50,10) align("left")
     button text("Gen") channel("ampGen") bounds(1150,120,30,20)
     nslider text("user table") channel ("ampUTab")range(1,20,1,1,1) bounds(1000,0,80,30)
     button text("recall") channel("ampTabRecall") bounds(1080,15,80,15)
     button text("store") channel("ampTabStore") bounds(1080,0,80,15)
-    xypad bounds(1030,32,120, 85) rangex(0,1,0) rangey(0,1,0) channel("ampTweenX","ampTweenY")
+    xypad bounds(1030,32,120, 85) rangeX(0,1,0) rangeY(0,1,0) channel("ampTweenX","ampTweenY")
     nslider bounds(995,32,30,20) range(1,20,1,1,1) channel("ampTween1")
     nslider bounds(995,92,30,20) range(1,20,2,1,1) channel("ampTween2")
     nslider bounds(1155,32,30,20) range(1,20,3,1,1) channel("ampTween3")
@@ -25,15 +25,15 @@ image bounds(8,200,1200,150)colour(0,0,0,0){
     label text("D") bounds(5,20,20,20)
     label text("E") bounds(5,50,20,20)
     label text("L") bounds(5,80,20,20)    
-    gentable tablenumber(102) bounds(50,0,942, 140) amprange(0,1, 102, 0.01) identchannel("delTab") tablegridcolour(0,0,0,0) tablecolour:N(72, 209, 204) tablebackgroundcolour(27, 59, 59)
+    gentable tableNumber(102) bounds(50,0,942, 140) ampRange(0,1, 102, 0.01) identChannel("delTab") tableGridColour(0,0,0,0) tableColour:N(72, 209, 204) tablebackgroundColour(27, 59, 59)
     combobox  channel("delGenMethod") bounds(1000,120,50,20) items("rand","gaus","cos","slope", "zero")
-    hslider channel("delGenArg") identchannel("delGenArg_ID")  range(0,1,0.5,1, 0.01), bounds(1050,120,60,20) visible(0)
-    label identchannel("delGenArgText"), text(" "), bounds (1110,125,50,10) align("left")
+    hslider channel("delGenArg") identChannel("delGenArg_ID")  range(0,1,0.5,1, 0.01), bounds(1050,120,60,20) visible(0)
+    label identChannel("delGenArgText"), text(" "), bounds (1110,125,50,10) align("left")
     button text("Gen") channel("delGen") bounds(1150,120,30,20)
     nslider text("user table") channel ("delUTab")range(1,20,1,1,1) bounds(1000,0,80,30) value(5)
     button text("recall") channel("delTabRecall") bounds(1080,15,80,15)
     button text("store") channel("delTabStore") bounds(1080,0,80,15)
-    xypad bounds(1030,32,120, 85) rangex(0,1,0) rangey(0,1,0) channel("delTweenX","delTweenY")
+    xypad bounds(1030,32,120, 85) rangeX(0,1,0) rangeY(0,1,0) channel("delTweenX","delTweenY")
     nslider bounds(995,32,30,20) range(1,20,5,1,1) channel("delTween1")
     nslider bounds(995,92,30,20) range(1,20,6,1,1) channel("delTween2")
     nslider bounds(1155,32,30,20) range(1,20,7,1,1) channel("delTween3")
@@ -45,15 +45,15 @@ image bounds(8,350,1200,150) colour(0,0,0,0){
     label text("F") bounds(5,20,20,20)
     label text("") bounds(5,50,20,20)
     label text("B") bounds(5,80,20,20)   
-    gentable tablenumber(103) bounds(50,0,942, 140) amprange(0,1, 103, 0.01) identchannel("fbTab") tablegridcolour(0,0,0,0) tablecolour:N(72, 209, 204) tablebackgroundcolour(27, 59, 59)
+    gentable tableNumber(103) bounds(50,0,942, 140) ampRange(0,1, 103, 0.01) identChannel("fbTab") tableGridColour(0,0,0,0) tableColour:N(72, 209, 204) tablebackgroundColour(27, 59, 59)
     combobox  channel("fbGenMethod") bounds(1000,120,50,20) items("rand","gaus","cos","slope", "zero")
-    hslider channel("fbGenArg") identchannel("fbGenArg_ID")  range(0,1,0.5,1, 0.01), bounds(1050,120,60,20) visible(0)
-    label identchannel("fbGenArgText"), text(" "), bounds (1110,125,50,10) align("left")
+    hslider channel("fbGenArg") identChannel("fbGenArg_ID")  range(0,1,0.5,1, 0.01), bounds(1050,120,60,20) visible(0)
+    label identChannel("fbGenArgText"), text(" "), bounds (1110,125,50,10) align("left")
     button text("Gen") channel("fbGen") bounds(1150,120,30,20)
     nslider text("user table") channel ("fbUTab")range(1,20,1,1,1) bounds(1000,0,80,30) value(9)
     button text("recall") channel("fbTabRecall") bounds(1080,15,80,15)
     button text("store") channel("fbTabStore") bounds(1080,0,80,15)
-    xypad bounds(1030,32,120, 85) rangex(0,1,0) rangey(0,1,0) channel("fbTweenX","fbTweenY")
+    xypad bounds(1030,32,120, 85) rangeX(0,1,0) rangeY(0,1,0) channel("fbTweenX","fbTweenY")
     nslider bounds(995,32,30,20) range(1,20,9,1,1) channel("fbTween1")
     nslider bounds(995,92,30,20) range(1,20,10,1,1) channel("fbTween2")
     nslider bounds(1155,32,30,20) range(1,20,11,1,1) channel("fbTween3")
@@ -164,7 +164,7 @@ instr update
             iTweenR = iTween1+iTween2+iTween3+iTween4
             
             copya2ftab iTweenR, 101            
-            chnset	"tablenumber(101)", "ampTab"                                    
+            chnset	"tableNumber(101)", "ampTab"                                    
             rireturn    
     endif
         
@@ -190,7 +190,7 @@ instr update
             iTweenR = iTween1+iTween2+iTween3+iTween4
             
             copya2ftab iTweenR, 102            
-            chnset	"tablenumber(102)", "delTab"                                    
+            chnset	"tableNumber(102)", "delTab"                                    
             rireturn    
     endif
     
@@ -214,7 +214,7 @@ instr update
             iTweenR = iTween1+iTween2+iTween3+iTween4
             
             copya2ftab iTweenR, 103            
-            chnset	"tablenumber(103)", "fbTab"                                    
+            chnset	"tableNumber(103)", "fbTab"                                    
             rireturn    
     endif
 
@@ -331,9 +331,9 @@ instr update
         elseif iGenMethod == 5 then ;zero
             itab ftgen iFtTarget, 0, -iBands, 2, 0            
        endif
-        chnset	"tablenumber(101)", "ampTab"
-        chnset	"tablenumber(102)", "delTab"
-        chnset	"tablenumber(103)", "fbTab" 
+        chnset	"tableNumber(101)", "ampTab"
+        chnset	"tableNumber(102)", "delTab"
+        chnset	"tableNumber(103)", "fbTab" 
         rireturn
     
     ;Store tables 
@@ -402,9 +402,9 @@ instr update
     iFtTarget = i(kFtTarget)
     iUTable = i(kUTable)+500
     tableicopy iFtTarget,iUTable
-    chnset	"tablenumber(101)", "ampTab"
-    chnset	"tablenumber(102)", "delTab"
-    chnset	"tablenumber(103)", "fbTab"
+    chnset	"tableNumber(101)", "ampTab"
+    chnset	"tableNumber(102)", "delTab"
+    chnset	"tableNumber(103)", "fbTab"
     rireturn    
    
    endif
@@ -418,7 +418,7 @@ instr update
                 if ((kMouseY >= iGuiAmpY) && (kMouseY <=iGuiAmpY+140)) then
                 kPos = floor((kMouseX-58)/iGuiX*iBands)
                 tablew 1-((kMouseY-iGuiAmpY)/iGuiY), kPos, 101
-                chnset	"tablenumber(101)", "ampTab"
+                chnset	"tableNumber(101)", "ampTab"
                 endif
             endif
         endif
@@ -431,7 +431,7 @@ instr update
                 if ((kMouseY >= iGuiDelY) && (kMouseY <=iGuiDelY+140)) then
                 kPos = floor((kMouseX-58)/iGuiX*iBands)
                 tablew 1-((kMouseY-iGuiDelY)/iGuiY), kPos, 102
-                chnset	"tablenumber(102)", "delTab"
+                chnset	"tableNumber(102)", "delTab"
                 endif
             endif
         endif
@@ -443,7 +443,7 @@ instr update
                 if ((kMouseY >= iGuiFbY) && (kMouseY <=iGuiFbY+140)) then
                 kPos = floor((kMouseX-58)/iGuiX*iBands)
                 tablew 1-((kMouseY-iGuiFbY)/iGuiY), kPos, 103
-                chnset	"tablenumber(103)", "fbTab"
+                chnset	"tableNumber(103)", "fbTab"
                 endif
             endif
         endif

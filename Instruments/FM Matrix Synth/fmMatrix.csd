@@ -1,5 +1,5 @@
 <Cabbage>
-form caption("FM Matrix Synth") size(780, 470), colour("darkgrey"), pluginid("fmcp")
+form caption("FM Matrix Synth") size(780, 470), colour("darkgrey"), pluginId("fmcp")
 
 image bounds(550,250,160,25) colour(0,0,0,0){
     combobox bounds(0, 0, 100, 25), channel("combobox"), populate("*.snaps")
@@ -8,25 +8,25 @@ image bounds(550,250,160,25) colour(0,0,0,0){
 
 keyboard bounds(8, 355, 765, 95)
 
-label bounds (50,10,50,15)text("Ratio") align("Centre") fontcolour("black")
+label bounds (50,10,50,15)text("Ratio") align("Centre") fontColour("black")
 #define RATIO nslider bounds(50,10, 50,25) range(0,10,1,1,0.001)
 
-label bounds (128,10,50,15)text("Offset") align("Centre") fontcolour("black")
+label bounds (128,10,50,15)text("Offset") align("Centre") fontColour("black")
 #define HZ nslider bounds(125,10, 50,25) range(-100,100,0,1,.1)
 
-label bounds (200,10,100,15)text("Waveform")  fontcolour("black")
+label bounds (200,10,100,15)text("Waveform")  fontColour("black")
 #define WAVE combobox bounds(200,10,100,25) items("Sin", "Tri","Saw","Square") 
 
-label bounds (315,10,100,15)text("A  D  S  R") fontcolour("black")
+label bounds (315,10,100,15)text("A  D  S  R") fontColour("black")
 #define A rslider bounds(315,10,30,30) range(0.0001,3,0.1,0.5,0.01)
 #define D rslider bounds(345,10,30,30) range(0.0001,3,0.1,0.5,0.01)
 #define S rslider bounds(375,10,30,30) range(0,1,1,1,0.01)
 #define R rslider bounds(405,10,30,30) range(0.0001,3,0.1,0.5,0.01)
 
-label bounds (450,10,25,15)text("Inv") fontcolour("black")
+label bounds (450,10,25,15)text("Inv") fontColour("black")
 #define INVERT checkbox bounds(445,15,15,15)
 
-label bounds (490,10,25,15)text("Vel") fontcolour("black")
+label bounds (490,10,25,15)text("Vel") fontColour("black")
 #define VEL rslider bounds (475,10,30,30) range(0,1,1,1,0.01)
 
 #define OUTBOX nslider range(0,1,0,1,0.01)
@@ -37,7 +37,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
 
     ;This is the osc module
     image bounds(10,25,530,50) colour("grey"){
-        label text("A") fontcolour("black") bounds(2,10,25,25)
+        label text("A") fontColour("black") bounds(2,10,25,25)
         $RATIO channel("Ratio_A") 
         $HZ channel("Offset_A")        
         $WAVE channel("Wave_A")
@@ -49,7 +49,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
         $VEL channel("Vel_A")
     }
     image bounds(10,80,530,50) colour("grey"){
-        label text("B") fontcolour("black") bounds(2,10,25,25)
+        label text("B") fontColour("black") bounds(2,10,25,25)
         $RATIO channel("Ratio_B")
         $HZ channel("Offset_B")
         $WAVE channel("Wave_B")
@@ -64,7 +64,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
     
         }
     image bounds(10,135,530,50) colour("grey"){
-        label text("C") fontcolour("black") bounds(2,10,25,25)
+        label text("C") fontColour("black") bounds(2,10,25,25)
         $RATIO channel("Ratio_C")
         $HZ bounds(125,10, 50,25) channel("Offset_C")
         $WAVE channel("Wave_C")
@@ -79,7 +79,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
     
         }
     image bounds(10,190,530,50) colour("grey"){
-        label text("D") fontcolour("black") bounds(2,10,25,25)
+        label text("D") fontColour("black") bounds(2,10,25,25)
         $RATIO channel("Ratio_D")
         $HZ bounds(125,10, 50,25) channel("Offset_D")
         $WAVE channel("Wave_D")
@@ -91,7 +91,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
         $VEL channel("Vel_D")
     }
         image bounds(10,245,530,50) colour("grey"){
-        label text("E") fontcolour("black") bounds(2,10,25,25)
+        label text("E") fontColour("black") bounds(2,10,25,25)
         $RATIO channel("Ratio_E")
         $HZ bounds(125,10, 50,25) channel("Offset_E")
         $WAVE channel("Wave_E")
@@ -104,7 +104,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
     }
         }
         image bounds(10,300,530,50) colour("grey"){
-        label text("F") fontcolour("black") bounds(2,10,25,25)
+        label text("F") fontColour("black") bounds(2,10,25,25)
         $RATIO channel("Ratio_F")
         $HZ bounds(125,10, 50,25) channel("Offset_F")
         $WAVE channel("Wave_F")
@@ -121,7 +121,7 @@ label bounds (490,10,25,15)text("Vel") fontcolour("black")
     }
     
     ;Grid
-    label text("Routing Matrix") bounds(550,5,225,20) fontcolour("black")
+    label text("Routing Matrix") bounds(550,5,225,20) fontColour("black")
     image bounds(550, 25,225,210) colour("grey"){
         $MATBUT text("A") bounds(10,10,30,20) channel("Grid_A") value(1)
         $MATNUM bounds(45,10,30,20) channel("Grid_B2A")

@@ -1,15 +1,19 @@
 <Cabbage>
 
-#define impulseSlider rslider bounds(10,35,20,20) range(0.0001,1,0.0001,1,0.0001) colour(0,0,0,0) trackercolour("white") trackerthickness(2) trackeroutsideradius(1) trackerinsideradius(0)
+#define impulseSlider rslider bounds(10,35,20,20) range(0.0001,1,0.0001,1,0.0001) colour(0,0,0,0) trackerColour("white") trackerThickness(2) trackerOutsideRadius(1) trackerInsideRadius(0)
 
-#define defaultSlider rslider trackeroutsideradius(1) trackerinsideradius(0) trackercolour(180,0,0) outlinecolour(255,200,200) markerstart(0) markerend(1)
+#define defaultSlider rslider trackerOutsideRadius(1) trackerInsideRadius(0) trackerColour(180,0,0) outlineColour(255,200,200) markerStart(0) markerEnd(1)
 
-form caption("Bellforge") size(800, 700), colour("whitesmoke"), pluginid("cpmd"), import("./bellforge_plants.plant"), bundle("./bellforge_plants.plant", "./bellforge.snaps")
+form caption("Bellforge") size(800, 700), colour("whitesmoke"), pluginId("cpmd"), import("./bellforge_plants.plant"), bundle("./bellforge_plants.plant", "./bellforge.snaps")
 
-label text("Bellforge") bounds(20,10,500,36) align("left") fontcolour("black")
+label text("Bellforge") bounds(20,10,500,36) align("left") fontColour("black")
 image colour(0,0,0,0) bounds(200, 20, 200,100) {
     combobox bounds(0, 0, 100, 25), channel("preset"), populate("*.snaps") directory("./")
     filebutton bounds(110, 0, 60, 25), channel("but1"), text("Save"), mode("snapshot")
+}
+image colour(0,0,0,0) bounds(545, 20, 200,100) {
+    label bounds(0, 0, 100, 14) text("filter opcode")
+    combobox bounds(100, 0, 100, 18), channel("mode") items("resonz", "mode", "reson", "oscil - sin", "oscil - tri", "oscil - square", "oscil - saw")
 }
 
 
@@ -18,14 +22,14 @@ image bounds(0,80,800,800) colour(0,0,0,0)
 
 image bounds(20,0,740,60) colour(0,0,0,0){
     image bounds(0,0,150,60) colour(0,0,0,0){
-    label bounds(0,0,100,18) text("Input") fontcolour("black") align("left")
+    label bounds(0,0,100,18) text("Input") fontColour("black") align("left")
     $defaultSlider channel("inputGain") range(0.1,10,1,0.5,0.01) bounds(0,20,40,40) 
     combobox bounds(50,30,70,20)  items("impulse", "bow", "live input") channel("inputMode") align("centre")
 
     }
     image bounds(170 ,0,150,60) colour(0,0,0,0){
-    image bounds(0 ,0,150,60) colour(200,0,0,255) identchannel("impulseInput") visible(1) active(1){
-        gentable tablenumber(200) amprange(0, 1, 200, 0) active(0) bounds(10,10,125, 20) tablecolour("black") tablebackgroundcolour(0,0,0,0) tablegridcolour(0,0,0,0) identchannel("impulseTab")
+    image bounds(0 ,0,150,60) colour(200,0,0,255) identChannel("impulseInput") visible(1) active(1){
+        gentable tableNumber(200) ampRange(0, 1, 200, 0) active(0) bounds(10,10,125, 20) tableColour("black") tablebackgroundColour(0,0,0,0) tableGridColour(0,0,0,0) identChannel("impulseTab")
         $impulseSlider value(1) channel("impulseSlider1")
         $impulseSlider bounds(35,35,20,20) channel("impulseSlider2")
         $impulseSlider bounds(60,35,20,20) channel("impulseSlider3")
@@ -33,25 +37,25 @@ image bounds(20,0,740,60) colour(0,0,0,0){
         $impulseSlider bounds(110,35,20,20) channel("impulseSlider5")
     }
     
-    image bounds(0,0,150,60) colour(0,200,0,255) identchannel("bowedInput") visible(0) active(1){
-        label bounds(0,0,150,14) text("Bow Type") fontcolour("black")
+    image bounds(0,0,150,60) colour(0,200,0,255) identChannel("bowedInput") visible(0) active(1){
+        label bounds(0,0,150,14) text("Bow Type") fontColour("black")
 
         combobox bounds(25,15,100,14) channel("bowType") items("random saw", "random impulses", "noise")
-        //hrange channel("bowNoiseOffsetLow", "bowNoiseOffsetHigh") identchannel("sawBowOptions") range(-36,24, -24:-12, 1, 0.5) bounds(15,30,140,20) visible(0)
-        image identchannel("sawBowOptions") bounds(45,35,50,20) visible(0) colour(0,0,0,0){
+        //hrange channel("bowNoiseOffsetLow", "bowNoiseOffsetHigh") identChannel("sawBowOptions") range(-36,24, -24:-12, 1, 0.5) bounds(15,30,140,20) visible(0)
+        image identChannel("sawBowOptions") bounds(45,35,50,20) visible(0) colour(0,0,0,0){
             $impulseSlider range(-36,24, -24, 1, 0.5) channel("bowNoiseOffsetLow") bounds(0, 0, 20,20)
             $impulseSlider range(-36,24, -12, 1, 0.5) channel("bowNoiseOffsetHigh") bounds(30, 0, 20,20)
         }
-        //hrange channel("bowNoiseDenseLow", "bowNoiseDenseHigh") identchannel("dustBowOptions") range(10,500, 2:5, 0.5, 0.001) bounds(15,30,140,30) visible(0)
-            image identchannel("dustBowOptions") bounds(45,35,50,20) visible(0) colour(0,0,0,0){
+        //hrange channel("bowNoiseDenseLow", "bowNoiseDenseHigh") identChannel("dustBowOptions") range(10,500, 2:5, 0.5, 0.001) bounds(15,30,140,30) visible(0)
+            image identChannel("dustBowOptions") bounds(45,35,50,20) visible(0) colour(0,0,0,0){
             $impulseSlider range(10,500, 10, 0.5, 0.001) channel("bowNoiseDenseLow") bounds(0, 0, 20,20)
             $impulseSlider range(10,500, 50, 0.5, 0.001) channel("bowNoiseDenseHigh") bounds(30, 0, 20,20)
         }
         
-        $impulseSlider channel("bowNoiseBeta") identchannel("bowNoise") range(-0.9, 0.9, 0, 1, 0.01) bounds(0,32,150,30) visible(0) 
+        $impulseSlider channel("bowNoiseBeta") identChannel("bowNoise") range(-0.9, 0.9, 0, 1, 0.01) bounds(0,32,150,30) visible(0) 
         }
         
-        image bounds(0,0,150,60) colour(0,200,0,255) identchannel("liveInput") visible(0) active(1){
+        image bounds(0,0,150,60) colour(0,200,0,255) identChannel("liveInput") visible(0) active(1){
                 combobox bounds(25,15,100,14) channel("inputCh") items("mono","stereo","24 channel") value(2)
 
         }
@@ -59,8 +63,8 @@ image bounds(20,0,740,60) colour(0,0,0,0){
         
         
         
-        image identchannel("inputFilter") bounds(350,0,200,60) visible(1) colour(0,0,0,0){
-            button channel("inputFilterMode")  text("") bounds(5,0,90,14) colour:0(180,20,20) colour:1(200,100,100) identchannel("inputFilterModeIdent") value(1) 
+        image identChannel("inputFilter") bounds(350,0,200,60) visible(1) colour(0,0,0,0){
+            button channel("inputFilterMode")  text("") bounds(5,0,90,14) colour:0(180,20,20) colour:1(200,100,100) identChannel("inputFilterModeIdent") value(1) 
             button channel("inputFilterEnabled") value(0)  text("lp / hp state") bounds(5,40,90,14) colour:0("grey") colour:1(200,80,80)  
             hslider channel ("InputFilterOffset") range(-36,100,12,1,0.25) bounds(5,12,90,30) 
             
@@ -74,18 +78,18 @@ image bounds(20,0,740,60) colour(0,0,0,0){
     
        }
        image bounds(600,0,150,60) colour(0,,0,0){
-       label text("output") bounds(0,0,100,18) align("left") fontcolour("black")
-       $defaultSlider channel("gain") bounds(0,20,40,40) range(0,2,1,0.5,0.01) trackercolour(255,0,0,255) outlinecolour(0,0,0,0) colour(0,0,0,0) 
+       label text("output") bounds(0,0,100,18) align("left") fontColour("black")
+       $defaultSlider channel("gain") bounds(0,20,40,40) range(0,2,1,0.5,0.01) trackerColour(255,0,0,255) outlineColour(0,0,0,0) colour(0,0,0,0) 
         combobox items("stereo", "discrete channels (24)") bounds(50,30,70,20) channel("outputMode")
 }
 }
 
 
-modalSynthMatrix namespace("cp"), bounds(0,100,800,280) 
+modalSynthMatrix nameSpace("cp"), bounds(0,100,800,280) 
 
 
 image bounds(24,400,250,80) colour(0,0,0,0){
-    label text("ADSR") bounds (0,0,200,18) align("left") fontcolour("black")
+    label text("ADSR") bounds (0,0,200,18) align("left") fontColour("black")
     $defaultSlider channel("voiceAttack") bounds(8,24,30,30) range(5,5000,10,0.25,0.001) 
     $defaultSlider channel("voiceDecay") bounds(48,24,30,30) range(0,5000,10,0.25,0.001) 
     $defaultSlider channel("voiceSustain") bounds(88,24,30,30) range(0,1,0.8,1,0.001) 
@@ -95,7 +99,7 @@ image bounds(24,400,250,80) colour(0,0,0,0){
          $defaultSlider range(50, 5000, 100, 0.25, 1) channel("qMin") bounds(0, 0, 20,20)
          $defaultSlider range(50, 5000, 250, 0.25, 1) channel("qMax") bounds(30, 0, 20,20)
         }
-    label text("q range") bounds(125,63,160,14) align("left") fontcolour(0,0,0,255)
+    label text("q range") bounds(125,63,160,14) align("left") fontColour(0,0,0,255)
 
     
 
@@ -104,8 +108,8 @@ image bounds(24,400,250,80) colour(0,0,0,0){
 
 
 image bounds(580, 400, 200, 150)colour(0,0,0,0) {
-    label text("Macro Buttons")  bounds(20,0,160,18)  fontcolour(0,0,0,255)
-    button text("all on") bounds(20,24,75,20) channel("allOn") identchannel("allOn_ident") latched(0)
+    label text("Macro Buttons")  bounds(20,0,160,18)  fontColour(0,0,0,255)
+    button text("all on") bounds(20,24,75,20) channel("allOn") identChannel("allOn_ident") latched(0)
     button text("all off") bounds(105,24,75,20) channel("allOff") latched(0)
     //button text("randomize notes") bounds(20,50,160,20) channel("randNotes") latched(0)
     //button text("randomize q") bounds(20,75,160,20) channel("randQ")     latched(0)
@@ -117,13 +121,13 @@ image bounds(580, 400, 200, 150)colour(0,0,0,0) {
 }
 
 image colour(0,0,0,0) bounds(320,400,200,200){
-    label text("Random Deviations") bounds (0,0,200,18) align("left") fontcolour("black")
+    label text("Random Deviations") bounds (0,0,200,18) align("left") fontColour("black")
     $defaultSlider channel("randomPitchPerNote") range(0,12,0,0.5,0.01) bounds(0,24,30,30) 
     $defaultSlider channel("randomQPerNote") range(0,1,0,0.5,0.01) bounds(40,24,30,30) 
     $defaultSlider channel("randomGainPerNote") range(0,1,0,0.5,0.01) bounds(80,24,30,30)
     $defaultSlider channel("randomPanPerNote") range(0,1,0,0.5,0.01) bounds(120,24,30,30) 
-    button text("key tracked")  bounds(20,60,100,14) channel("keyTrack") identchannel("keyTrackIdent") colour:1(100,100,255)
-    button text("randomize states")  bounds(20,80,100,14) channel("randStateNote") identchannel("randStateNoteIdent") colour:1(100,100,255)
+    button text("key tracked")  bounds(20,60,100,14) channel("keyTrack") identChannel("keyTrackIdent") colour:1(100,100,255)
+    button text("randomize states")  bounds(20,80,100,14) channel("randStateNote") identChannel("randStateNoteIdent") colour:1(100,100,255)
 
     }
 
@@ -144,7 +148,7 @@ vslider bounds(15,0,20,80) channel("trem") range(0,1,0,1,0.01) colour(0,0,0)
 
 }
 
-keyboard bounds (110,0,624,80) blacknotecolour(25,0,0) whitenotecolour(220,120,120) arrowbackgroundcolour(0,0,0,0) keysdowncolour(255,200,200,255) arrowcolour("black") mouseoverkeycolour(255,200,200,255)
+keyboard bounds (110,0,624,80) blackNoteColour(25,0,0) whiteNoteColour(220,120,120) arrowbackgroundColour(0,0,0,0) keysdowncolour(255,200,200,255) arrowColour("black") mouseOverKeyColour(255,200,200,255)
 
 }
 }
@@ -194,7 +198,7 @@ opcode resonbank, aa, akiiiiikai
 //Resonant filters in parallel
 
     aSig, kBaseNote, iNotesTab, iQsTab, iGainsTab,iPansTab, iEnabledTab, kOutputMode, aEnv, iCount xin
-    
+    iMode chnget "mode"
     iNumber= tableng(iNotesTab)-1
     aOutL = 0
     aOutR = 0
@@ -240,7 +244,9 @@ opcode resonbank, aa, akiiiiikai
     
     kQ = kQ+iQRandom*2000
     
-    kQ = kThisFreq/kQ
+    if (iMode == 1 || iMode == 3) then
+        kQ = kThisFreq/kQ
+    endif
     
     //printk2 kQ
     iPan tab_i iCount, iPansTab
@@ -264,8 +270,22 @@ opcode resonbank, aa, akiiiiikai
     else 
         aResonIn = aSig
     endif
-    
-    aTemp resonz aResonIn, kThisFreq, kQ
+    if (iMode == 1) then
+        aTemp resonz aResonIn, kThisFreq, kQ
+    elseif (iMode == 2) then 
+        aTemp mode aResonIn, kThisFreq, kQ
+    elseif (iMode == 3) then 
+        aTemp reson aResonIn, kThisFreq, kQ
+    elseif (iMode == 4) then
+        aTemp oscil kQ/10000, kThisFreq, -1, random(-1,1)
+    elseif (iMode == 5) then
+        aTemp oscil kQ/10000, kThisFreq, 4, random(-1,1)
+    elseif (iMode == 6) then
+        aTemp oscil kQ/10000, kThisFreq, 3, random(-1,1)
+    elseif (iMode == 7) then
+        aTemp oscil kQ/10000, kThisFreq, 2, random(-1,1)
+        
+    endif
     iTrem random 0, 1
     aThisTrem = gaTrem[0]*((iTrem)%1)+gaTrem[1]*((iTrem+0.25)%1)+gaTrem[2]*((iTrem+0.5)%1)+gaTrem[3]*((iTrem+0.75)%1)
     
@@ -697,7 +717,7 @@ if (kRandomGain == 1) || (kRandAll == 1)  then
 
 
 if (kRandomPan == 1) || (kRandAll == 1)  then
-    kPan = k(rand(, 2))+0.5
+    kPan = k(rand(0.5, 2))+0.5
     SName sprintfk "pan%d", kCount
     chnset kPan, SName
     endif
@@ -851,7 +871,7 @@ od
  iImpulseStep = tableng(giImpulse)/4
  giImpulse ftgen 200, 0, 2049, -5, iImpulseLevels[0], iImpulseStep, iImpulseLevels[1], iImpulseStep, iImpulseLevels[2], iImpulseStep, iImpulseLevels[3], iImpulseStep, iImpulseLevels[4] 
 
- chnset "tablenumber(200)", "impulseTab"
+ chnset "tableNumber(200)", "impulseTab"
  
 turnoff
 endin
@@ -861,7 +881,7 @@ instr readSoundfile
     if (strcmpk(gSImpulseSelect, "") != 0) then   
     giSfTab = giSfTab%5+1
     giSfTabs ftgen giSfTab, 0, 0, 1, gSImpulseSelect, 0, 0, 0 
-    Smessage sprintf "tablenumber(%d)", giSfTab
+    Smessage sprintf "tableNumber(%d)", giSfTab
     chnset Smessage, "impulseDisplay"
     endif
 
@@ -961,7 +981,9 @@ f 203 0 2049 7 0 1024 1 1024 -1
 i "io" 0 z
 i "lfoDrive" 0 z
 i "update" 0 z
-
+f 2 0 1024 7 0 512 1 0 -1 512 0
+f 3 0 1024 7 1 512 1 0 -1 512 -1
+f 4 0 1024 7 -1 512 1 512 -1
 
 </CsScore>
 </CsoundSynthesizer>
